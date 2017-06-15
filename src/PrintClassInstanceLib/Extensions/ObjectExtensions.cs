@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Transfer;
+using ApiIntegration;
+using ApiIntegration.Messages;
 using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
@@ -173,30 +176,29 @@ namespace PrintClassInstanceLib.Extensions
             }
         }
 
-        public static async Task<bool> DumpToS3(this object classInstance, AmazonS3Client s3Client )
+        public static byte[] GetByteArray(this object classInstance)
         {
-            try
-            {
-                var cts = new CancellationTokenSource();
-                var transferUtility = new TransferUtility(s3Client);
+            var type = classInstance.GetType();
+            var printInfo = classInstance.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+            Encoding enc = new UTF8Encoding(true, true);
 
-                var type = classInstance.GetType();
-                var printInfo = classInstance.GetObjectProperties();
-                var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
-
-                var byteArray = cleanData.SelectMany(s => Encoding.ASCII.GetBytes(s)).ToArray();
-                
-                using (Stream ms = new MemoryStream(byteArray))
-                {
-                    await transferUtility.UploadAsync(ms, "tt2development", "objectdump.txt", cts.Token);
-                }
-                return true;
-            }
-            catch (Exception ex)
+            var byteArray = cleanData.SelectMany(s =>
             {
-                //needs logging
-                return false;
-            }
+                var al = new ArrayList();
+                al.AddRange(enc.GetBytes(s));
+                al.AddRange(enc.GetBytes(Environment.NewLine));
+                return al.ToArray().OfType<byte>().ToArray();
+            }).ToArray();
+
+            return byteArray;
+        }
+
+        public static async Task<OperationMessage> DumpToS3(this object classInstance, S3UploadMessage uploadMessage )
+        {
+            uploadMessage.ByteArray = classInstance.GetByteArray();
+            var task = S3Operations.UploadToS3(uploadMessage);
+            return await task;
         }
     }
 }
