@@ -137,6 +137,10 @@ namespace PrintClassInstanceLib
 
                 while (queue.Count > 0)
                 {
+                    if (queue.Count > 100000)
+                    {
+                        break;
+                    }
                     var popObject = queue.Dequeue();
                     reflectMember = popObject.Obj.HasMembersOrGetValue();
                     if (reflectMember.Item1)

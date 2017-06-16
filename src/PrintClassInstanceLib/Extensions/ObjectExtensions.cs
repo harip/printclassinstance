@@ -9,11 +9,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Transfer;
-using ApiIntegration;
-using ApiIntegration.Messages;
 using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
+using PrintClassInstanceLib.Messages;
+using PrintClassInstanceLib.Upload;
 
 namespace PrintClassInstanceLib.Extensions
 {
@@ -194,7 +194,7 @@ namespace PrintClassInstanceLib.Extensions
             return byteArray;
         }
 
-        public static async Task<OperationMessage> DumpToS3(this object classInstance, S3UploadMessage uploadMessage )
+        public static async Task<OperationMessage> SaveToS3(this object classInstance, S3UploadMessage uploadMessage)
         {
             uploadMessage.ByteArray = classInstance.GetByteArray();
             var task = S3Operations.UploadToS3(uploadMessage);

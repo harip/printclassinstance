@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ApiIntegration;
-using ApiIntegration.Messages;
+using Amazon.S3;
 using PrintClassInstanceLib.Extensions;
+using PrintClassInstanceLib.Messages;
 
 
 namespace DemoCore
@@ -16,21 +16,22 @@ namespace DemoCore
         {
             //Dump the object graph to a file
             var data = TestDataGenerator.GenerateTestData1();
+            data.SaveToFile(@"c:\tmp\instance.txt");
 
+            //Save to S3
             var contentData = new Dictionary<string, string>
             {
-                {"AccessKeyId", "rgertret"},
-                {"SecretAccessKey", "retwertwret"}
+                { "AccessKeyId","your access key"},
+                {"SecretAccessKey","your secret access key"}
             };
-
-            var auth = new Authenticate(null);
-            var client = auth.S3Client(Amazon.RegionEndpoint.USEast1, contentData);
-            var  task=data.DumpToS3(client);
-            var result = task.Result;
-
-            return;
-
-            data.SaveToFile(@"c:\tmp\instance.txt");
+            var uploadMessage = new S3UploadMessage
+            {
+                S3Client = new AmazonS3Client(contentData["AccessKeyId"], contentData["SecretAccessKey"],
+                        Amazon.RegionEndpoint.USEast1),
+                BucketName = "your bucket name",
+                Key = "objectgraph.txt"
+            };
+            var result = data.SaveToS3(uploadMessage).Result;
 
             //Get member value
             var memberNames = data.MemberNames();
