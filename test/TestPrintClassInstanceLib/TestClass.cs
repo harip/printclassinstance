@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrintClassInstanceLib.Extensions;
@@ -18,6 +20,7 @@ namespace TestPrintClassInstanceLib
                 Y = "Y",
                 Z = "Z"
             };
+            
             var diff = simpleObject.CompareObjects(simpleObject, "obj1", "obj2");
             Assert.AreEqual(0, diff.NoMatchList.Count,
                 "The objects are similar however the library returned that objects are different");

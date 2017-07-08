@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,10 +13,15 @@ namespace DemoCore
 {
     public class Program
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
         public static void Main(string[] args)
         {
             //Dump the object graph to a file
             var data = TestDataGenerator.GenerateTestData1();
+            
+
             data.SaveToFile(@"c:\tmp\instance.txt");
 
             //Save to S3
