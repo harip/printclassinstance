@@ -4,7 +4,6 @@ ConsoleAppCore/bin/*
 packages
 obj
 .vs/restore.dg
-Nuget*
 .vs/PrintClass/v14/.suo
 Demo/.vs/Demo/v14/.suo
 .vs/config/applicationhost.config
