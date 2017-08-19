@@ -205,7 +205,7 @@ namespace LibraryTests
             };
 
             var ns = so1.GetNamespace();
-            Assert.AreEqual("TestPrintClassInstanceLib.TestData", ns);
+            Assert.AreEqual("LibraryTests.TestData", ns);
         }
 
         [TestMethod]
@@ -251,7 +251,7 @@ namespace LibraryTests
         public void TestNamespaceUsingTypeExtensions()
         {
             var ns = typeof(SimpleObjectWithParent).GetNamespace();
-            Assert.AreEqual("TestPrintClassInstanceLib.TestData", ns);
+            Assert.AreEqual("LibraryTests.TestData", ns);
         }
 
         [TestMethod]
