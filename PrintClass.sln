@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A8D3A70B-6B34-404D-8D36-1AD8A6E79A1F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2381C917-B7F3-41E6-9B63-470EC418744E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{E3225EC4-B070-4D23-BE60-C52471780F2E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{ADAB7BFE-EDFC-4FA9-A55E-EC13AA42475F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BF3429B7-6A34-4CC2-A5FB-58B3530AF958}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{574AFC55-CAC4-492D-ACAD-7B0B0073FEB8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrintClassInstanceLib", "src\PrintClassInstanceLib\PrintClassInstanceLib.csproj", "{8FE8EB97-A87D-4D49-8589-9844C3C97716}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintClassInstanceLib", "src\PrintClassInstanceLib\PrintClassInstanceLib.csproj", "{8A7BD468-B937-49E6-A75F-6168B40B6510}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoCore", "Demo\DemoCore\DemoCore.csproj", "{00871874-8189-4954-9952-B37567A0CD89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoCore", "demo\DemoCore\DemoCore.csproj", "{57C9C0EB-08D4-4717-8678-87676A7363E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPrintClassInstanceLib", "test\TestPrintClassInstanceLib\TestPrintClassInstanceLib.csproj", "{B2033B41-1359-4391-BB63-97BC07FB3F27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryTests", "test\LibraryTests\LibraryTests.csproj", "{C3C9DE02-FF93-4414-AF85-D2755533DD7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,25 +21,28 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8FE8EB97-A87D-4D49-8589-9844C3C97716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FE8EB97-A87D-4D49-8589-9844C3C97716}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FE8EB97-A87D-4D49-8589-9844C3C97716}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FE8EB97-A87D-4D49-8589-9844C3C97716}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00871874-8189-4954-9952-B37567A0CD89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00871874-8189-4954-9952-B37567A0CD89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00871874-8189-4954-9952-B37567A0CD89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00871874-8189-4954-9952-B37567A0CD89}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2033B41-1359-4391-BB63-97BC07FB3F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2033B41-1359-4391-BB63-97BC07FB3F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2033B41-1359-4391-BB63-97BC07FB3F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2033B41-1359-4391-BB63-97BC07FB3F27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A7BD468-B937-49E6-A75F-6168B40B6510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A7BD468-B937-49E6-A75F-6168B40B6510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A7BD468-B937-49E6-A75F-6168B40B6510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A7BD468-B937-49E6-A75F-6168B40B6510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C9C0EB-08D4-4717-8678-87676A7363E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C9C0EB-08D4-4717-8678-87676A7363E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C9C0EB-08D4-4717-8678-87676A7363E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C9C0EB-08D4-4717-8678-87676A7363E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C9DE02-FF93-4414-AF85-D2755533DD7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3C9DE02-FF93-4414-AF85-D2755533DD7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3C9DE02-FF93-4414-AF85-D2755533DD7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3C9DE02-FF93-4414-AF85-D2755533DD7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8FE8EB97-A87D-4D49-8589-9844C3C97716} = {A8D3A70B-6B34-404D-8D36-1AD8A6E79A1F}
-		{00871874-8189-4954-9952-B37567A0CD89} = {E3225EC4-B070-4D23-BE60-C52471780F2E}
-		{B2033B41-1359-4391-BB63-97BC07FB3F27} = {BF3429B7-6A34-4CC2-A5FB-58B3530AF958}
+		{8A7BD468-B937-49E6-A75F-6168B40B6510} = {2381C917-B7F3-41E6-9B63-470EC418744E}
+		{57C9C0EB-08D4-4717-8678-87676A7363E5} = {ADAB7BFE-EDFC-4FA9-A55E-EC13AA42475F}
+		{C3C9DE02-FF93-4414-AF85-D2755533DD7B} = {574AFC55-CAC4-492D-ACAD-7B0B0073FEB8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8DCA6F69-FC7C-4C1D-93F3-08203DC6A045}
 	EndGlobalSection
 EndGlobal

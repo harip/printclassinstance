@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-
 namespace PrintClassInstanceLib.Extensions
 {
     public static class ObjectMetaDataExtensions
@@ -19,7 +17,5 @@ namespace PrintClassInstanceLib.Extensions
         {
             return classInstance.GetType().GetAllMemberNames();
         }
-
-          
     }
 }

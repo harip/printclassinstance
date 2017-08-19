@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Amazon.S3;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Messages;
-
 
 namespace DemoCore
 {
     public class Program
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
         public static void Main(string[] args)
         {
             //Dump the object graph to a file
             var data = TestDataGenerator.GenerateTestData1();
-            
-
-            data.SaveToFile(@"c:\tmp\instance.txt");
+            data.SaveToFile(@"C:\tmp\test.txt");
 
             //Save to S3
             var contentData = new Dictionary<string, string>
@@ -58,10 +49,10 @@ namespace DemoCore
             var obj2 = TestDataGenerator.GenerateTestData2();
 
             //Compare two objects 
-            var diff1 =obj1.CompareObjects(obj2,"obj1", "obj2");
+            var diff1 = obj1.CompareObjects(obj2, "obj1", "obj2");
             Console.WriteLine(diff1.NoMatchList.Any() ? "The objects differ" : "The objects are same");
             diff1.SaveToFile(@"c:\tmp\compare1.txt");
-            
+
 
             //Compare two objects 
             //Todo: Figure out the names instead of sending them as parameters
@@ -71,8 +62,8 @@ namespace DemoCore
 
 
             //Compare two objects
-            var simpleObj1 = new Object1 {X = 1, Y="A",Z="Z"};
-            var simpleObj2 = new Object2 { X = "1", Y = "B",Z="Z" };
+            var simpleObj1 = new Object1 { X = 1, Y = "A", Z = "Z" };
+            var simpleObj2 = new Object2 { X = "1", Y = "B", Z = "Z" };
             var diff3 = simpleObj1.CompareObjects(simpleObj2, "simpleObj1", "simpleObj2");
             Console.WriteLine(diff3.NoMatchList.Any() ? "The objects differ" : "The objects are same");
             diff3.SaveToFile(@"c:\tmp\compare3.txt");

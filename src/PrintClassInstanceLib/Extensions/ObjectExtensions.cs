@@ -7,8 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.S3;
-using Amazon.S3.Transfer;
 using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;

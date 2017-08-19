@@ -53,26 +53,7 @@ namespace DemoCore
         public PrintMeEnum PrintMeEnum { get; set; }
         public Dictionary<string, List<PrintMeChild>> DictionaryWithListTest { get; set; }
         public Tuple<int, int, int, string> TestTuple { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string _propertyChanged;
-
-        public string PropChangeField
-        {
-            get { return _propertyChanged; }
-            set
-            {
-                _propertyChanged = value;
-                OnPropertyChanged("PropChangeField");
-            }
-        }
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
+        
         public PrintMe()
         {
             PrivateStringPropertyTest = "PrivateStringPropertyTest";
