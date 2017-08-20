@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Model;
 
@@ -282,22 +283,12 @@ namespace PrintClassInstanceLib
         {
             if (customAttributes == null || !customAttributes.Any())
                 return false;
-
-            foreach (var item in customAttributes)
-            {
-                var z = item.GetType() == typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute);
-            }    
-
-            return customAttributes.Any(s => s.GetType() == typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute));
+            return customAttributes.Any(s => s is CompilerGeneratedAttribute);
         }
 
         public static Type GetBaseType(Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.BaseType;
-#else
             return type.GetTypeInfo().BaseType;
-#endif
         }
     }
 }

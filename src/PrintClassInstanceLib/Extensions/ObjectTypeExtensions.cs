@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-//Don't remove this
 using System.Reflection;
 using PrintClassInstanceLib.Model;
 
@@ -71,7 +70,7 @@ namespace PrintClassInstanceLib.Extensions
 
             if ((type.ToString() == "System.String") || isPrimitive)
             {
-                return Tuple.Create<bool, object>(true, data);
+                return Tuple.Create(true, data);
             }
 
             if (isValueType && type == typeof(Guid))
@@ -96,7 +95,7 @@ namespace PrintClassInstanceLib.Extensions
 
             if (isValueType)
             {
-                return Tuple.Create<bool, object>(true, data);
+                return Tuple.Create(true, data);
             }
 
             return Tuple.Create<bool, object>(false, null);
@@ -104,47 +103,27 @@ namespace PrintClassInstanceLib.Extensions
 
         public static bool ModifiedIsArrayType(this Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.IsArray;
-#else
             return type.GetTypeInfo().IsArray;
-#endif
         }
 
         public static bool ModifiedIsValueType(this Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.IsValueType;
-#else
             return type.GetTypeInfo().IsValueType;
-#endif
         }
 
         public static bool ModifiedIsPrimitiveType(this Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.IsPrimitive;
-#else
             return type.GetTypeInfo().IsPrimitive;
-#endif
         }
 
         public static bool ModifiedIsGenericType(this Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.IsGenericType;
-#else
             return type.GetTypeInfo().IsGenericType;
-#endif
         }
 
         public static bool ModifiedIsEnum(this Type type)
         {
-#if (NET45 || NET451 || NET452 || NET46 || NET461 || NET462)
-            return type.IsEnum;
-#else
             return type.GetTypeInfo().IsEnum;
-#endif
         }
     }
 }

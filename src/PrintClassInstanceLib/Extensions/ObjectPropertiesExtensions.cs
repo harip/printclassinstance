@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-//Don't remove this
-using System.Reflection;
+﻿using System.Linq;
 using PrintClassInstanceLib.Model;
 
 namespace PrintClassInstanceLib.Extensions
