@@ -15,6 +15,11 @@ namespace DemoCore
             var data = TestDataGenerator.GenerateTestData1();
             data.SaveToFile(@"C:\tmp\test.txt");
 
+            //Flatten and combine
+            var data2 = TestDataGenerator.GenerateTestData2();
+            var x = data.CombineAndFlatten(data2).Result;
+            var y = data.CombineAndFlattenedJson(data2).Result;
+
             //Save to S3
             var contentData = new Dictionary<string, string>
             {
@@ -52,15 +57,13 @@ namespace DemoCore
             var diff1 = obj1.CompareObjects(obj2, "obj1", "obj2");
             Console.WriteLine(diff1.NoMatchList.Any() ? "The objects differ" : "The objects are same");
             diff1.SaveToFile(@"c:\tmp\compare1.txt");
-
-
+            
             //Compare two objects 
             //Todo: Figure out the names instead of sending them as parameters
             var diff2 = obj1.CompareObjects(obj1, "obj1", "obj1");
             Console.WriteLine(diff2.NoMatchList.Any() ? "The objects differ" : "The objects are same");
             diff2.SaveToFile(@"c:\tmp\compare2.txt");
-
-
+            
             //Compare two objects
             var simpleObj1 = new Object1 { X = 1, Y = "A", Z = "Z" };
             var simpleObj2 = new Object2 { X = "1", Y = "B", Z = "Z" };

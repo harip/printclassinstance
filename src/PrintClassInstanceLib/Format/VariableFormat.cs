@@ -8,6 +8,16 @@ namespace PrintClassInstanceLib.Format
 {
     public static class VariableFormat
     {
+        public static Dictionary<string,object> CreateOutputAsDictionary(PrintInfo printInfo, Type type)
+        {
+            var classDataList = new Dictionary<string, object>();
+            foreach (var printInfoValue in printInfo.Values)
+            {
+                GetOutputData(printInfoValue, classDataList, printInfoValue.Name);
+            }
+            return classDataList;
+        }
+
         public static List<string> CreateOutputAsVariableFormat(PrintInfo printInfo, Type type,OutputMode outputMode=OutputMode.Default)
         {
             var classDataList = new List<string>();
@@ -39,6 +49,44 @@ namespace PrintClassInstanceLib.Format
             return cleanData;
         }
 
+        public static void GetOutputData(PrintInfo printInfo, Dictionary<string, object> outputData, string tab)
+        {
+            if (printInfo.Values == null || !printInfo.Values.Any())
+            {
+                object val;
+                switch (printInfo.Type)
+                {
+                    case "System.String":
+                    case "String":
+                        val = $"\"{printInfo.Value}\"";
+                        break;
+                    default:
+                        val = printInfo.Value ?? "null";
+                        break;
+                }
+
+                //var key = string.IsNullOrEmpty(tab) 
+                //    ? printInfo.Name 
+                //    : !string.IsNullOrEmpty(printInfo.Name) ? $"{tab}_{printInfo.Name}" : tab;
+                outputData.Add(tab, val);
+                return;
+            }
+            foreach (var printInfoValue in printInfo.Values)
+            {
+                var key1 = tab;
+                if (printInfo.IsEnum)
+                {
+                    key1 = $"{tab}_{printInfo.Values.IndexOf(printInfoValue)}";
+                }
+                if (!string.IsNullOrEmpty(printInfoValue.Name))
+                {
+                    key1 = $"{key1}_{printInfoValue.Name}";
+                }
+                
+                GetOutputData(printInfoValue, outputData, key1);
+            }
+        }
+        
         public static void GetOutputData(PrintInfo printInfo, List<string> outputData, string tab, OutputMode outputMode = OutputMode.Default)
         {
             var currentTab = string.Empty;
@@ -65,7 +113,7 @@ namespace PrintClassInstanceLib.Format
                 {
                     outputData.Add($"{currentTab}// {GetVerboseString(printInfo)}");
                 }
-
+                
                 outputData.Add(string.IsNullOrEmpty(printInfo.Name)
                     ? $"{currentTab}{val},"
                     : $"{currentTab}{printInfo.Name} = {val},");

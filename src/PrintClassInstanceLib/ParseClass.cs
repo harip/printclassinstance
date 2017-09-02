@@ -152,6 +152,11 @@ namespace PrintClassInstanceLib
                     if (popObject.Obj.IsEnumerable() || popObject.Obj.IsArray())
                     {
                         EnumerableObjectHandler(popObject, queue, pList);
+                        var mem = pList.SingleOrDefault(s => s.Id == popObject.Id);
+                        if (mem != null)
+                        {
+                            mem.IsEnum = true;
+                        }
                     }
                     else
                     {

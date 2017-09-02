@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
+using Newtonsoft.Json;
 using PrintClassInstanceLib.Messages;
 using PrintClassInstanceLib.Upload;
 
@@ -195,6 +196,51 @@ namespace PrintClassInstanceLib.Extensions
             uploadMessage.ByteArray = classInstance.GetByteArray();
             var task = S3Operations.UploadToS3(uploadMessage);
             return await task;
+        }
+
+        public static Task<Dictionary<string, object>> Flatten(this object classInstance)
+        {
+            var type = classInstance.GetType();
+            var printInfo = classInstance.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, type );
+            return Task.FromResult(cleanData);
+        }
+
+        public static Task<string> FlattenedJson(this object classInstance)
+        {
+            var data = Flatten(classInstance).Result;
+            var jsonData = JsonConvert.SerializeObject(data);
+            return Task.FromResult(jsonData);
+        }
+
+        public static Task<Dictionary<string, object>> CombineAndFlatten(this object classInstance, params object[] classInstance1)
+        {
+            var objects = new List<object> { classInstance};
+            objects.AddRange(classInstance1);
+
+            var dict=new Dictionary<string,object>();
+            objects.ForEach(o =>
+            {
+                var type = o.GetType();
+                var printInfo = o.GetObjectProperties();
+                var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, type);
+
+                cleanData.ForEach(c =>
+                {
+                    var key = $"obj{objects.IndexOf(o)}_{c.Key}";
+                    if (!dict.ContainsKey(key))
+                    {
+                        dict.Add(key,c.Value);
+                    }
+                });
+            });
+            return Task.FromResult(dict);
+        }
+
+        public static Task<string> CombineAndFlattenedJson(this object classInstance, params object[] classInstance1)
+        {
+            var dict = CombineAndFlatten(classInstance, classInstance1).Result;
+            return Task.FromResult(JsonConvert.SerializeObject(dict));
         }
     }
 }

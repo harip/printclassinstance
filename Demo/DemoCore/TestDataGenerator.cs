@@ -165,5 +165,13 @@ namespace DemoCore
             };
             return data;
         }
+
+        public static object GenerateTestData3()
+        {
+            return new 
+            {
+                Anonymous = "true"
+            };
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace PrintClassInstanceLib.Model
         public Guid ParentId { get; set; }
         public bool IsStatic { get; set; }
         public bool IsPrivate { get; set; }
+        public bool IsEnum { get; set; }
 
         public object RawMemberValue { get; set; }
         public Type RawMemberType { get; set; }
