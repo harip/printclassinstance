@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LibraryTests.TestData
 {
@@ -14,6 +15,15 @@ namespace LibraryTests.TestData
         public int X { get; set; }
         public int Y { get; set; }
         public string Z { get; set; }
+        public string Z1;
+    }
+
+
+    public class SimpleObject2
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Z { get; set; } 
     }
 
     public class SimpleObjectWithList
@@ -59,5 +69,34 @@ namespace LibraryTests.TestData
     public class Grandparent
     {
         public int GrandparentProperty { get; set; }
+    }
+
+    public class TestStruct
+    {
+        //public Tuple<int, int, string> Tuple { get; set; }
+        //public (int intItem1, int intItem2, int intItem3, string strItem4) TupleC7 { get; set; }
+        //public SimpleObject1 SimpleObject1;
+        public Book Book { get; set; }
+    }
+
+    public struct Book
+    {
+        public string Title;
+        public string Author { get; set; }
+    }
+
+    public class TestValueTuple
+    {
+        public (int intItem1, int intItem2, int intItem3, string strItem4) ValueTuple { get; set; }
+    }
+
+    public class TestTuple
+    {
+        public Tuple<int, int, string> Tuple { get; set; }
+    }
+
+    public class TestChildField
+    {
+        public SimpleObject1 SimpleObject1;
     }
 }

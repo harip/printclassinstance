@@ -3,7 +3,7 @@ using PrintClassInstanceLib.Model;
 
 namespace PrintClassInstanceLib.Extensions
 {
-    internal static class ObjectPropertiesExtensions
+    public static class ObjectPropertiesExtensions
     {
         public static PrintInfo GetObjectProperties(this object classInstance)
         {

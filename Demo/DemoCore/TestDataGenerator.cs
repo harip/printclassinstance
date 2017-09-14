@@ -107,7 +107,8 @@ namespace DemoCore
                         }
                     }
                 },
-                TestTuple = Tuple.Create(1, 1, 1, "1"),
+
+                TestTuple = (1,1,1,"1"),
                 DateTimeTest = DateTime.Parse("09/16/2016"),
                 ListOfStringTest = new List<string> { "A", "B", "C" },
             };

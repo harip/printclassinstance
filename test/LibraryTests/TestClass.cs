@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibraryTests.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrintClassInstanceLib.Extensions;
+using PrintClassInstanceLib.Format;
 
 namespace LibraryTests
 {
@@ -52,7 +54,7 @@ namespace LibraryTests
                 Y = "Y",
                 Z = "Z"
             };
-            var simpleObject1 = new SimpleObject1
+            var simpleObject1 = new SimpleObject2
             {
                 X = 1,
                 Y = 1,
@@ -276,6 +278,83 @@ namespace LibraryTests
             var obj = new SimpleObjectWithParent();
             var val=obj.InvokeMethod("GetParentCount", null);
             Assert.AreEqual(val, 10);
+        }
+
+        [TestMethod]
+        public void TestStruct()
+        {
+            var obj = new TestStruct
+            {
+                Book = new Book { Title = "harrypotter", Author = "rowling" }
+            };
+
+            var type = obj.GetType();
+            var printInfo = obj.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type );
+
+            Assert.IsTrue(cleanData.Any(s=>s.Contains("Title")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("Author")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("harrypotter")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("rowling")));
+        }
+
+        [TestMethod]
+        public void TestValueTuple()
+        {
+            var obj = new TestValueTuple
+            {
+                ValueTuple = (1,2,3,"TestValueTuple")
+            };
+
+            var type = obj.GetType();
+            var printInfo = obj.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+
+            Assert.IsTrue(cleanData.Any(s => s.Contains("1")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("2")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("3")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("TestValueTuple")));
+        }
+
+        [TestMethod]
+        public void TestTuple()
+        {
+            var obj = new TestTuple
+            {
+                Tuple = Tuple.Create(1,2,"TupleTest")
+            };
+
+            var type = obj.GetType();
+            var printInfo = obj.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+
+            Assert.IsTrue(cleanData.Any(s => s.Contains("1")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("2")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("TupleTest")));
+        }
+
+        [TestMethod]
+        public void TestChildField()
+        {
+            var obj = new TestChildField
+            {
+                SimpleObject1 = new SimpleObject1
+                {
+                    Z1 = "IAmAFeild",
+                    Y = 1,
+                    Z = "IAmAProperty",
+                    X = 2
+                }
+            };
+
+            var type = obj.GetType();
+            var printInfo = obj.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+
+            Assert.IsTrue(cleanData.Any(s => s.Contains("1")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("2")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("IAmAFeild")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("IAmAProperty")));
         }
     }
 }

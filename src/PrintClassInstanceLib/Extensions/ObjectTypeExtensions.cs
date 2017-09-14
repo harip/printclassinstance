@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using PrintClassInstanceLib.Model;
 
@@ -67,6 +68,7 @@ namespace PrintClassInstanceLib.Extensions
             var isPrimitive = ModifiedIsPrimitiveType(type);
             var isGeneric = ModifiedIsGenericType(type);
             var isEnum = ModifiedIsEnum(type);
+            var containsPropsOrFeilds = ContainsPropsOrFeilds(type);
 
             if ((type.ToString() == "System.String") || isPrimitive)
             {
@@ -93,12 +95,26 @@ namespace PrintClassInstanceLib.Extensions
                 return Tuple.Create<bool, object>(true, $"DateTime.Parse(\"{data}\")");
             }
 
+            if (isValueType && containsPropsOrFeilds)
+            {
+                return Tuple.Create<bool, object>(false, null);
+            }
+
             if (isValueType)
             {
                 return Tuple.Create(true, data);
             }
 
             return Tuple.Create<bool, object>(false, null);
+        }
+
+        private static bool ContainsPropsOrFeilds(this Type type)
+        {
+            return type
+                .GetMembers()
+                .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
+                .ToList()
+                .Any();
         }
 
         public static bool ModifiedIsArrayType(this Type type)

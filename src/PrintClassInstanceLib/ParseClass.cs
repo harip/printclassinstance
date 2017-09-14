@@ -204,33 +204,53 @@ namespace PrintClassInstanceLib
             return relationList;
         }
 
+        private static void GetInfo(object currentObject,string name)
+        {
+            
+        }
+
         private static void ObjectHandler(object currentObject, StackedObject popObject, Queue<StackedObject> queue, Queue<PrintInfo> pList)
         {
             var nestedMembers = currentObject.GetType()
                 .GetMembers()
-                .Where(s => s.MemberType == MemberTypes.Property)
+                .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field )
                 .ToList();
             foreach (var nestedMember in nestedMembers)
             {
-                var pInfo = currentObject.GetType().GetProperty(nestedMember.Name);
+                string objType;
+                string nameSpace;
+                object objVal; 
 
+                if (nestedMember.MemberType == MemberTypes.Field)
+                {
+                    var fld= currentObject.GetType().GetField(nestedMember.Name);
+                    objVal = fld.GetValue(currentObject);
+                    objType = fld.FieldType.ToString();
+                    nameSpace = fld.FieldType.Namespace;
+                }
+                else
+                {
+                    var prop = currentObject.GetType().GetProperty(nestedMember.Name);
+                    objVal = prop.GetValue(currentObject,null);
+                    objType = prop.PropertyType.ToString();
+                    nameSpace = prop.PropertyType.Namespace;
+                }
+ 
                 var stackedObject = new StackedObject
                 {
                     Id = Guid.NewGuid(),
                     ParentId = popObject.Id,
-                    Obj = pInfo.GetValue(currentObject, null)
+                    Obj = objVal
                 };
                 queue.Enqueue(stackedObject);
                 
                 var cinfo = new PrintInfo
                 {
                     Name = nestedMember.Name,
-                    Type = pInfo.PropertyType.ToString(),
-                    Namespace = pInfo.PropertyType.Namespace,
+                    Type = objType,
+                    Namespace = nameSpace,
                     Id = stackedObject.Id,
-                    ParentId = stackedObject.ParentId,
-                    IsPrivate = pInfo.GetGetMethod(true)!=null && pInfo.GetGetMethod(true).IsPrivate,
-                    IsStatic = pInfo.GetGetMethod(true) != null && pInfo.GetGetMethod(true).IsStatic,
+                    ParentId = stackedObject.ParentId
                 };
 
                 if (currentObject.GetType().GetObjTypeCategory() == ObjType.IsKeyValPair)
