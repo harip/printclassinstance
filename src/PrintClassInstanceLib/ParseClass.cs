@@ -17,7 +17,14 @@ namespace PrintClassInstanceLib
             BindingFlags bindingFlags = 
             BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
         {
-            GetReflectionInfo(baseType, data, printInfo, bindingFlags);
+            try
+            {
+                GetReflectionInfo(baseType, data, printInfo, bindingFlags);
+            }
+            catch (Exception ex)
+            {
+                //Need to add logging
+            }
         }
 
         public static void GetFieldOrPropertyKeyValue(object data,
@@ -27,7 +34,15 @@ namespace PrintClassInstanceLib
             var type = data?.GetType();
             if (type == null)
                 return;
-            GetReflectionInfo(type, data, printInfo, bindingFlags);
+
+            try
+            {
+                GetReflectionInfo(type, data, printInfo, bindingFlags);
+            }
+            catch (Exception ex)
+            {
+                //Need to add logging
+            }
         }
 
         private static void GetReflectionInfo(Type type,
@@ -35,8 +50,6 @@ namespace PrintClassInstanceLib
             PrintInfo printInfo, 
             BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
         {
-            var isPrivate = false;
-            var isStatic = false;
             var members = type.GetMembers(bindingFlags)
                 .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
                 .ToList();
@@ -76,8 +89,6 @@ namespace PrintClassInstanceLib
                         var getGetMethod = propertyInfo.GetGetMethod(true);
                         if (getGetMethod != null)
                         {
-                            isPrivate = getGetMethod.IsPrivate;
-                            isStatic = getGetMethod.IsStatic;
                         }
                         break;
                     case MemberTypes.Field:
@@ -98,8 +109,6 @@ namespace PrintClassInstanceLib
                                 return $"Set value failed - {ex.Message}";
                             }
                         };
-                        isPrivate = fieldInfo.IsPrivate;
-                        isStatic = fieldInfo.IsStatic;
                         break;
                 }
 
@@ -119,8 +128,6 @@ namespace PrintClassInstanceLib
                     Namespace = mTypeNamespace,
                     Id = stackedObj.Id,
                     ParentId = stackedObj.ParentId,
-                    IsPrivate=isPrivate,
-                    IsStatic=isStatic,
                     RawMemberValue = val,
                     RawMemberType = mType,
                     SetVal=setVal,
@@ -138,8 +145,11 @@ namespace PrintClassInstanceLib
 
                 while (queue.Count > 0)
                 {
-                    if (queue.Count > 100000)
+                    if (queue.Count > 1000 || pList.Count> 1000)
                     {
+                        pList=new Queue<PrintInfo>();
+                        pInfo.Value = "Error: Member too big to evaluate or has infinite reference";
+                        pList.Enqueue(pInfo);
                         break;
                     }
                     var popObject = queue.Dequeue();
@@ -188,7 +198,6 @@ namespace PrintClassInstanceLib
                         //Get the info's parentId
                         var parent = relationList.SingleOrDefault(s => s.Id == info.ParentId);
                         parent.Values.Add(info);
-                        //parent.Values.Add(info);
                         toRemove.Add(info);
                     }
                 }
@@ -203,12 +212,7 @@ namespace PrintClassInstanceLib
             }
             return relationList;
         }
-
-        private static void GetInfo(object currentObject,string name)
-        {
-            
-        }
-
+        
         private static void ObjectHandler(object currentObject, StackedObject popObject, Queue<StackedObject> queue, Queue<PrintInfo> pList)
         {
             var nestedMembers = currentObject.GetType()
@@ -219,11 +223,11 @@ namespace PrintClassInstanceLib
             {
                 string objType;
                 string nameSpace;
-                object objVal; 
+                object objVal;
 
                 if (nestedMember.MemberType == MemberTypes.Field)
                 {
-                    var fld= currentObject.GetType().GetField(nestedMember.Name);
+                    var fld = currentObject.GetType().GetField(nestedMember.Name);
                     objVal = fld.GetValue(currentObject);
                     objType = fld.FieldType.ToString();
                     nameSpace = fld.FieldType.Namespace;
@@ -231,11 +235,11 @@ namespace PrintClassInstanceLib
                 else
                 {
                     var prop = currentObject.GetType().GetProperty(nestedMember.Name);
-                    objVal = prop.GetValue(currentObject,null);
+                    objVal = prop.GetValue(currentObject, null);
                     objType = prop.PropertyType.ToString();
                     nameSpace = prop.PropertyType.Namespace;
                 }
- 
+
                 var stackedObject = new StackedObject
                 {
                     Id = Guid.NewGuid(),
@@ -315,5 +319,9 @@ namespace PrintClassInstanceLib
         {
             return type.GetTypeInfo().BaseType;
         }
+    }
+
+    internal class PropertyOrFieldTooLargeException : Exception
+    {
     }
 }

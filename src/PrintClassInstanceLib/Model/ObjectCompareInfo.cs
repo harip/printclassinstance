@@ -4,11 +4,6 @@ namespace PrintClassInstanceLib.Model
 {
     public class ObjectCompareInfo
     {
-        public ObjectCompareInfo()
-        {
-            NoMatchList = new List<ObjectPropertyCompareInfo>();
-        }
-
-        public List<ObjectPropertyCompareInfo> NoMatchList { get; set; }
+        public List<ObjectPropertyCompareInfo> NoMatchList { get; set; } = new List<ObjectPropertyCompareInfo>();
     }
 }

@@ -56,18 +56,13 @@ namespace PrintClassInstanceLib.Format
                 object val;
                 switch (printInfo.Type)
                 {
-                    case "System.String":
-                    case "String":
+                    case var c when c == "System.String" || c == "String":
                         val = $"\"{printInfo.Value}\"";
                         break;
                     default:
                         val = printInfo.Value ?? "null";
                         break;
                 }
-
-                //var key = string.IsNullOrEmpty(tab) 
-                //    ? printInfo.Name 
-                //    : !string.IsNullOrEmpty(printInfo.Name) ? $"{tab}_{printInfo.Name}" : tab;
                 outputData.Add(tab, val);
                 return;
             }
@@ -100,8 +95,7 @@ namespace PrintClassInstanceLib.Format
                 object val;
                 switch (printInfo.Type)
                 {
-                    case "System.String":
-                    case "String":
+                    case var c when c == "System.String" || c == "String":
                         val = $"\"{printInfo.Value}\"";
                         break;
                     default:
@@ -154,14 +148,6 @@ namespace PrintClassInstanceLib.Format
         private static string GetVerboseString(PrintInfo printInfo)
         {
             var verboseString = $"{printInfo.Type}";
-            if (printInfo.IsPrivate)
-            {
-                verboseString = string.Concat(verboseString, ", IsPrivate");
-            }
-            if (printInfo.IsStatic)
-            {
-                verboseString = string.Concat(verboseString, ", IsStatic");
-            }
             return verboseString;
         }
     }

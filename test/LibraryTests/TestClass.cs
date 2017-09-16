@@ -356,5 +356,20 @@ namespace LibraryTests
             Assert.IsTrue(cleanData.Any(s => s.Contains("IAmAFeild")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("IAmAProperty")));
         }
+
+        [TestMethod]
+        public void TestInfiniteReference()
+        {
+            var infiniteLoop = new TestInfiniteLoop
+            {
+                IntVal = 10
+            };
+            infiniteLoop.InfiniteLoop = infiniteLoop;
+
+            var type = infiniteLoop.GetType();
+            var printInfo = infiniteLoop.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+            Assert.IsTrue(cleanData.Any(s => s.Contains("InfiniteLoop = Error: Member too big to evaluate or has infinite reference")));
+        }
     }
 }

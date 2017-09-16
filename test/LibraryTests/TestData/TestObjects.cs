@@ -73,9 +73,6 @@ namespace LibraryTests.TestData
 
     public class TestStruct
     {
-        //public Tuple<int, int, string> Tuple { get; set; }
-        //public (int intItem1, int intItem2, int intItem3, string strItem4) TupleC7 { get; set; }
-        //public SimpleObject1 SimpleObject1;
         public Book Book { get; set; }
     }
 
@@ -98,5 +95,11 @@ namespace LibraryTests.TestData
     public class TestChildField
     {
         public SimpleObject1 SimpleObject1;
+    }
+
+    public class TestInfiniteLoop
+    {
+        public int IntVal { get; set; }
+        public TestInfiniteLoop InfiniteLoop { get; set; }
     }
 }
