@@ -38,10 +38,9 @@ namespace PrintClassInstanceLib.Extensions
         public static void SaveToFile(this object classInstance, string fileName="objectGraph.txt",OutputMode outputMode=OutputMode.Default)
         {
             try
-            {
-                var type = classInstance.GetType();
+            { 
                 var printInfo = classInstance.GetObjectProperties();
-                var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type, outputMode);
+                var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, classInstance.GetType(), outputMode);
                 File.WriteAllLines(fileName, cleanData);
             }
             catch (Exception ex)
@@ -199,10 +198,9 @@ namespace PrintClassInstanceLib.Extensions
         }
 
         public static Task<Dictionary<string, object>> Flatten(this object classInstance)
-        {
-            var type = classInstance.GetType();
+        { 
             var printInfo = classInstance.GetObjectProperties();
-            var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, type );
+            var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, classInstance.GetType());
             return Task.FromResult(cleanData);
         }
 

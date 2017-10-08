@@ -320,8 +320,4 @@ namespace PrintClassInstanceLib
             return type.GetTypeInfo().BaseType;
         }
     }
-
-    internal class PropertyOrFieldTooLargeException : Exception
-    {
-    }
 }

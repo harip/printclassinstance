@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using PrintClassInstanceLib.Model;
 
 namespace PrintClassInstanceLib.Extensions
@@ -7,25 +8,36 @@ namespace PrintClassInstanceLib.Extensions
     {
         public static PrintInfo GetObjectProperties(this object classInstance)
         {
-            var type = classInstance.GetType();
-
-            var printInfo = new PrintInfo();
-            ParseClass.GetFieldOrPropertyKeyValue(classInstance, printInfo);
-
-            //Get all base types
-            var baseType = ParseClass.GetBaseType(type);
-            while (baseType != null && baseType.ToString() != "System.Object")
+            try
             {
-                var baseTypePrintInfo = new PrintInfo();
-                ParseClass.GetBaseTypeInfo(baseType, classInstance, baseTypePrintInfo);
-                if (baseTypePrintInfo.Values.Any())
-                {
-                    printInfo.Values.AddRange(baseTypePrintInfo.Values);
-                }
-                baseType = ParseClass.GetBaseType(baseType);
-            }
+                var type = classInstance.GetType();
 
-            return printInfo;
+                var printInfo = new PrintInfo();
+                ParseClass.GetFieldOrPropertyKeyValue(classInstance, printInfo);
+
+                //Get all base types
+                var baseType = ParseClass.GetBaseType(type);
+                while (baseType != null && baseType.ToString() != "System.Object")
+                {
+                    var baseTypePrintInfo = new PrintInfo();
+                    ParseClass.GetBaseTypeInfo(baseType, classInstance, baseTypePrintInfo);
+                    if (baseTypePrintInfo.Values.Any())
+                    {
+                        printInfo.Values.AddRange(baseTypePrintInfo.Values);
+                    }
+                    baseType = ParseClass.GetBaseType(baseType);
+                }
+
+                return printInfo;
+            }
+            catch (Exception ex)
+            {
+                return new PrintInfo
+                {
+                    Value = ex.Message,
+                    Name = "Error"
+                };
+            }
         }
     }
 }

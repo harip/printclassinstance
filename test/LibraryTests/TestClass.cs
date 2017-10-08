@@ -365,11 +365,30 @@ namespace LibraryTests
                 IntVal = 10
             };
             infiniteLoop.InfiniteLoop = infiniteLoop;
-
-            var type = infiniteLoop.GetType();
+             
             var printInfo = infiniteLoop.GetObjectProperties();
-            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, infiniteLoop.GetType());
             Assert.IsTrue(cleanData.Any(s => s.Contains("InfiniteLoop = Error: Member too big to evaluate or has infinite reference")));
+        }
+
+        [TestMethod]
+        public void TestListOfStrings()
+        {
+            var data = new TestListOfString
+            {
+                StringListField = new List<string> { "A","B","C" },
+                StringListProperty = new List<string> { "X","Y","Z"}
+            };
+
+            var printInfo = data.GetObjectProperties();
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, data.GetType());
+
+            Assert.IsTrue(cleanData.Any(s => s.Contains("A")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("B")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("C")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("X")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("Y")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("Z")));
         }
     }
 }

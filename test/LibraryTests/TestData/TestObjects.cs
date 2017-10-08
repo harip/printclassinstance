@@ -102,4 +102,10 @@ namespace LibraryTests.TestData
         public int IntVal { get; set; }
         public TestInfiniteLoop InfiniteLoop { get; set; }
     }
+
+    public class TestListOfString
+    {
+        public List<string> StringListProperty { get; set; }
+        public List<string> StringListField;
+    }
 }
