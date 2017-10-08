@@ -9,6 +9,7 @@ using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
 using Newtonsoft.Json;
+using NLog;
 using PrintClassInstanceLib.Messages;
 using PrintClassInstanceLib.Upload;
 
@@ -16,6 +17,8 @@ namespace PrintClassInstanceLib.Extensions
 {
     public static class ObjectExtensions
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
         public static object MemberValue(this object classInstance,string name)
         {
             var member = classInstance.GetObjectProperties().Values.SingleOrDefault(s => s.Name == name);
@@ -45,6 +48,7 @@ namespace PrintClassInstanceLib.Extensions
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error,ex, $"Failed to save objectgraph to {fileName}");
                 File.WriteAllText(fileName, ex.Message);
             }
         }
@@ -168,6 +172,7 @@ namespace PrintClassInstanceLib.Extensions
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, ex, $"Failed to invoke {methodName} - {ex.Message}");
                 return $"Failed to invoke {methodName} - {ex.Message}";
             }
         }
