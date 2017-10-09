@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
-using NLog;
 using PrintClassInstanceLib.Model;
 
 namespace PrintClassInstanceLib.Extensions
 {
     public static class ObjectPropertiesExtensions
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static PrintInfo GetObjectProperties(this object classInstance)
         {
             try
@@ -34,7 +32,6 @@ namespace PrintClassInstanceLib.Extensions
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error,ex, ex.Message);
                 return new PrintInfo
                 {
                     Value = ex.Message,

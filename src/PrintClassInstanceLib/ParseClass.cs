@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using NLog;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Model;
 
@@ -12,7 +11,6 @@ namespace PrintClassInstanceLib
 {
     public static class ParseClass
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static void GetBaseTypeInfo(Type baseType,
             object data, 
             PrintInfo printInfo, 
@@ -25,7 +23,7 @@ namespace PrintClassInstanceLib
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error,ex,ex.Message);
+                //Need to add logging
             }
         }
 
@@ -43,7 +41,7 @@ namespace PrintClassInstanceLib
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, ex, ex.Message);
+                //Need to add logging
             }
         }
 
@@ -149,8 +147,7 @@ namespace PrintClassInstanceLib
                 {
                     if (queue.Count > 1000 || pList.Count> 1000)
                     {
-                        Logger.Log(LogLevel.Info, "Member too big to evaluate or has infinite reference");
-                        pList =new Queue<PrintInfo>();
+                        pList=new Queue<PrintInfo>();
                         pInfo.Value = "Error: Member too big to evaluate or has infinite reference";
                         pList.Enqueue(pInfo);
                         break;
