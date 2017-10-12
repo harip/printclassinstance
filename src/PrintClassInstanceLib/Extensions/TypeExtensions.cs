@@ -40,32 +40,25 @@ namespace PrintClassInstanceLib.Extensions
             return baseClassType;
         }
 
-        public static List<string> GetMemberNames(this Type type, BindingFlags bindingFlags)
-        {
-            var memberNames=new List<string>();
-            type.GetMembers(bindingFlags)
-                .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
-                .ToList().ForEach(s =>
-                {
-                    if (!ParseClass.IsCompilerGeneratedItem(s.GetCustomAttributes().ToList()))
-                    {
-                        memberNames.Add(s.Name);
-                    }
-                });
-            return memberNames;
-        }
-
         public static List<string> GetAllMemberNames(this Type type)
         {
-            var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
-                                        BindingFlags.Static;
-            var members = type.GetMemberNames(bindingFlags);
-
+            return type.GetAllMemberInfos().Select(s => s.Name).ToList();
+        }
+        public static List<MemberInfo> GetAllMemberInfos(this Type type)
+        {
+            List<MemberInfo> GetMemberNames(Type t, BindingFlags f)
+            {
+                return t.GetMembers(f)
+                    .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
+                    .Where(s => !ParseClass.IsCompilerGeneratedItem(s.GetCustomAttributes().ToList()))
+                    .ToList();
+            }
+            
+            var members = GetMemberNames(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             var baseClassTypes = type.GetBaseClassesTypes();
             foreach (var baseClassType in baseClassTypes)
             {
-                var baseMembers =
-                    baseClassType.GetMemberNames(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                var baseMembers = GetMemberNames(baseClassType, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
                 members.AddRange(baseMembers);
             }
 

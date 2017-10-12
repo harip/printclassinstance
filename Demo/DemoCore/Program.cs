@@ -11,6 +11,9 @@ namespace DemoCore
     {
         public static void Main(string[] args)
         {
+            var fake=new PrintMe();
+            var fields = fake.MemberNames();
+
             //Dump the object graph to a file
             var data = TestDataGenerator.GenerateTestData1();
             data.SaveToFile(@"C:\tmp\test.txt");
