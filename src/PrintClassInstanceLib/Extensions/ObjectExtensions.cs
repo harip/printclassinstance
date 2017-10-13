@@ -182,11 +182,11 @@ namespace PrintClassInstanceLib.Extensions
             return byteArray;
         }
 
-        public static async Task<OperationMessage> SaveToS3(this object classInstance, S3UploadMessage uploadMessage)
+        public static async ValueTask<OperationMessage> SaveToS3(this object classInstance, S3UploadMessage uploadMessage)
         {
             uploadMessage.ByteArray = classInstance.GetByteArray();
-            var task = S3Operations.UploadToS3(uploadMessage);
-            return await task;
+            var task = await S3Operations.UploadToS3(uploadMessage);
+            return task;
         }
 
         public static Task<Dictionary<string, object>> Flatten(this object classInstance)
@@ -196,11 +196,11 @@ namespace PrintClassInstanceLib.Extensions
             return Task.FromResult(cleanData);
         }
 
-        public static Task<string> FlattenedJson(this object classInstance)
+        public static async ValueTask<string> FlattenedJson(this object classInstance)
         {
-            var data = Flatten(classInstance).Result;
+            var data = await Flatten(classInstance);
             var jsonData = JsonConvert.SerializeObject(data);
-            return Task.FromResult(jsonData);
+            return jsonData;
         }
 
         public static Task<Dictionary<string, object>> CombineAndFlatten(this object classInstance, params object[] classInstance1)
@@ -227,10 +227,10 @@ namespace PrintClassInstanceLib.Extensions
             return Task.FromResult(dict);
         }
 
-        public static Task<string> CombineAndFlattenedJson(this object classInstance, params object[] classInstance1)
+        public static async ValueTask<string> CombineAndFlattenedJson(this object classInstance, params object[] classInstance1)
         {
-            var dict = CombineAndFlatten(classInstance, classInstance1).Result;
-            return Task.FromResult(JsonConvert.SerializeObject(dict));
+            var dict = await CombineAndFlatten(classInstance, classInstance1);
+            return JsonConvert.SerializeObject(dict);
         }
     }
 }

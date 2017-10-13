@@ -70,7 +70,7 @@ namespace PrintClassInstanceLib.Extensions
             var isEnum = ModifiedIsEnum(type);
             var containsPropsOrFeilds = ContainsPropsOrFeilds(type);
 
-            if ((type.ToString() == "System.String") || isPrimitive)
+            if (type.ToString() == "System.String" || isPrimitive)
             {
                 return Tuple.Create(true, data);
             }

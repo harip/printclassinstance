@@ -40,26 +40,12 @@ namespace PrintClassInstanceLib.Extensions
             return baseClassType;
         }
 
-        public static void FakeData(this object obj)
-        {
-            //get type
-            var type = obj.GetType();
-        }
-
         public static List<string> GetAllMemberNames(this Type type)
         {
             return type.GetAllMemberInfos().Select(s => s.Name).ToList();
         }
         public static List<MemberInfo> GetAllMemberInfos(this Type type)
         {
-            List<MemberInfo> GetMemberNames(Type t, BindingFlags f)
-            {
-                return t.GetMembers(f)
-                    .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
-                    .Where(s => !ParseClass.IsCompilerGeneratedItem(s.GetCustomAttributes().ToList()))
-                    .ToList();
-            }
-            
             var members = GetMemberNames(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             var baseClassTypes = type.GetBaseClassesTypes();
             foreach (var baseClassType in baseClassTypes)
@@ -69,6 +55,14 @@ namespace PrintClassInstanceLib.Extensions
             }
 
             return members;
+
+            List<MemberInfo> GetMemberNames(Type t, BindingFlags f)
+            {
+                return t.GetMembers(f)
+                    .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
+                    .Where(s => !ParseClass.IsCompilerGeneratedItem(s.GetCustomAttributes().ToList()))
+                    .ToList();
+            }
         }
 
         public static List<MethodInfo> GetAllMethods(this Type type,bool includeComplierGeneratedAttribute=false)
