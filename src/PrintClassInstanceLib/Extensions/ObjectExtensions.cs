@@ -57,23 +57,7 @@ namespace PrintClassInstanceLib.Extensions
             var obj2Prop = object2.GetObjectProperties();
 
             //Get common properties, check name and data type
-            var propNames = new List<ObjectPropertyCompareInfo>();
-            obj1Prop.Values.ForEach(s =>
-            {
-                propNames.Add(new ObjectPropertyCompareInfo
-                {
-                    PropertyName = s.Name,
-                    PropertyType=s.Type
-                });
-            } );
-            obj2Prop.Values.ForEach(s =>
-            {
-                propNames.Add(new ObjectPropertyCompareInfo
-                {
-                    PropertyName = s.Name,
-                    PropertyType = s.Type
-                });
-            });
+            var propNames = GetPropNames(obj1Prop, obj2Prop);
 
             //Get names 
             propNames = propNames.DistinctBy(s => new {Name = s.PropertyName, Type = s.PropertyType}).ToList();
@@ -96,15 +80,8 @@ namespace PrintClassInstanceLib.Extensions
                 }
 
                 //The name type exist in both objects, check if their values are same
-                var obj1OutputData = new List<string>();
-                var obj1Val = obj1Prop.Values.First(s => s.Name == propName.PropertyName && s.Type == propName.PropertyType);
-                VariableFormat.GetOutputData(obj1Val, obj1OutputData,string.Empty,OutputMode.Raw);
-
-                var obj2OutputData = new List<string>();
-                var obj2Val = obj2Prop.Values.First(s => s.Name == propName.PropertyName && s.Type == propName.PropertyType);
-                VariableFormat.GetOutputData(obj2Val, obj2OutputData, string.Empty, OutputMode.Raw);
-
-                //If the count is not same
+                var obj1OutputData = GetObjectOutputData(obj1Prop, propName);
+                var obj2OutputData = GetObjectOutputData(obj2Prop, propName);
                 if (obj1OutputData.Count != obj2OutputData.Count)
                 {
                     compareResult.NoMatchList.Add(new ObjectPropertyCompareInfo
@@ -121,7 +98,6 @@ namespace PrintClassInstanceLib.Extensions
                     //All the values match
                     continue;
                 }
-
                 compareResult.NoMatchList.Add(new ObjectPropertyCompareInfo
                 {
                     PropertyName = propName.PropertyName,
@@ -129,8 +105,24 @@ namespace PrintClassInstanceLib.Extensions
                     Description = "Property value does not match"
                 });
             }
-
+            
             return compareResult;
+
+            List<string> GetObjectOutputData(PrintInfo objVal, ObjectPropertyCompareInfo compareInfo)
+            {
+                var returnData = new List<string>();
+                var obj1Val = objVal.Values.First(s => s.Name == compareInfo.PropertyName && s.Type == compareInfo.PropertyType);
+                VariableFormat.GetOutputData(obj1Val, returnData, string.Empty, OutputMode.Raw);
+                return returnData;
+            }
+            List<ObjectPropertyCompareInfo> GetPropNames(params PrintInfo[] pInfo)
+            {
+                return pInfo.SelectMany(s => s.Values.Select(r => new ObjectPropertyCompareInfo
+                {
+                    PropertyName = r.Name,
+                    PropertyType = r.Type
+                })).ToList();
+            }
         }
 
         public static T DeepClone<T>(this object classInstance)

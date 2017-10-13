@@ -40,6 +40,12 @@ namespace PrintClassInstanceLib.Extensions
             return baseClassType;
         }
 
+        public static void FakeData(this object obj)
+        {
+            //get type
+            var type = obj.GetType();
+        }
+
         public static List<string> GetAllMemberNames(this Type type)
         {
             return type.GetAllMemberInfos().Select(s => s.Name).ToList();
