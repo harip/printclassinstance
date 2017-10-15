@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Model;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace PrintClassInstanceLib
 {
@@ -55,7 +53,6 @@ namespace PrintClassInstanceLib
             var members = type.GetMembers(bindingFlags)
                 .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
                 .ToList();
-
             string SetVal<T>(T t, object fParent, object newVal)
             {
                 try
@@ -79,15 +76,15 @@ namespace PrintClassInstanceLib
 
             foreach (var memberInfo in members)
             {
-                object val = null;
-                Type mType = null;
-                var mTypeNamespace = string.Empty;
-                
                 if (IsCompilerGeneratedItem(memberInfo.GetCustomAttributes().ToList()))
                 {
                     continue;
                 }
 
+                object val = null;
+                Type mType = null;
+                var mTypeNamespace = string.Empty;
+                
                 switch (memberInfo.MemberType)
                 {
                     case MemberTypes.Property:
