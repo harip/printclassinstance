@@ -61,22 +61,22 @@ namespace PrintClassInstanceLib.Extensions
 
             //Get names 
             propNames = propNames.DistinctBy(s => new {Name = s.PropertyName, Type = s.PropertyType}).ToList();
-            foreach (var propName in propNames)
+            Parallel.ForEach(propNames, propName =>
             {
                 var inObject1 =obj1Prop.Values.Any(s => s.Name == propName.PropertyName && s.Type == propName.PropertyType);
-                var inObject2 = obj2Prop.Values.Any(s => s.Name == propName.PropertyName && s.Type == propName.PropertyType);
-                
+                var inObject2 =obj2Prop.Values.Any(s => s.Name == propName.PropertyName && s.Type == propName.PropertyType);
+
                 //If prop name and type is not in both objects capture that
                 if (!inObject1 || !inObject2)
                 {
                     var parentName = inObject1 ? object1Name : object2Name;
-                    compareResult.NoMatchList.Add( new ObjectPropertyCompareInfo
+                    compareResult.NoMatchList.Add(new ObjectPropertyCompareInfo
                     {
                         PropertyName = propName.PropertyName,
                         PropertyType = propName.PropertyType,
                         Description = $"Property only exists in {parentName}"
                     });
-                    continue;
+                    return;
                 }
 
                 //The name type exist in both objects, check if their values are same
@@ -92,11 +92,11 @@ namespace PrintClassInstanceLib.Extensions
                     });
                 }
 
-                var intersectElements = obj1OutputData.Select(s=>s.ToLower()).Except(obj2OutputData.Select(s=>s.ToLower())).ToList();
+                var intersectElements = obj1OutputData.Select(s => s.ToLower()).Except(obj2OutputData.Select(s => s.ToLower())).ToList();
                 if (!intersectElements.Any())
                 {
                     //All the values match
-                    continue;
+                    return;
                 }
                 compareResult.NoMatchList.Add(new ObjectPropertyCompareInfo
                 {
@@ -104,7 +104,7 @@ namespace PrintClassInstanceLib.Extensions
                     PropertyType = propName.PropertyType,
                     Description = "Property value does not match"
                 });
-            }
+            });
             
             return compareResult;
 
@@ -129,20 +129,16 @@ namespace PrintClassInstanceLib.Extensions
         {
             var type = classInstance.GetType();
             var newObject = Activator.CreateInstance(type);
-
             var obj1Prop = classInstance.GetObjectProperties();
             var memberNames = obj1Prop.Values.Select(s => s.Name).ToList();
-
-            foreach (var memberName in memberNames)
+            Parallel.ForEach(memberNames, (memberName) =>
             {
                 var memberValue = obj1Prop.Values.SingleOrDefault(s => s.Name == memberName);
-                if (memberValue == null)
+                if (memberValue != null)
                 {
-                    continue;
+                    newObject.SetMemberValue(memberName, memberValue.RawMemberValue); 
                 }
-                newObject.SetMemberValue(memberName, memberValue.RawMemberValue);
-            }
-
+            });
             return (T)newObject;
         }
 
@@ -207,15 +203,11 @@ namespace PrintClassInstanceLib.Extensions
         {
             var objects = new List<object> { classInstance};
             objects.AddRange(classInstance1);
-
             var dict=new Dictionary<string,object>();
-            objects.ForEach(o =>
+            classInstance1.Append(classInstance).ForEach(async o =>
             {
-                var type = o.GetType();
-                var printInfo = o.GetObjectProperties();
-                var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, type);
-
-                cleanData.ForEach(c =>
+                var oDict = await o.Flatten();
+                oDict.ForEach(c =>
                 {
                     var key = $"obj{objects.IndexOf(o)}_{c.Key}";
                     if (!dict.ContainsKey(key))

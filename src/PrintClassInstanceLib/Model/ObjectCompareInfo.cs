@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-
+using System.Collections.Concurrent;
 namespace PrintClassInstanceLib.Model
 {
     public class ObjectCompareInfo
     {
-        public List<ObjectPropertyCompareInfo> NoMatchList { get; set; } = new List<ObjectPropertyCompareInfo>();
+        public ConcurrentBag<ObjectPropertyCompareInfo> NoMatchList { get; set; } = new ConcurrentBag<ObjectPropertyCompareInfo>();
     }
 }
