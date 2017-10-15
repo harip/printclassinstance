@@ -56,6 +56,25 @@ namespace PrintClassInstanceLib
                 .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
                 .ToList();
 
+            string setVal1<T>(T t,object parent,object val)
+            {
+                try
+                {
+                    if (t is PropertyInfo)
+                    {
+
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
+
             foreach (var memberInfo in members)
             {
                 object val = null;
@@ -88,10 +107,6 @@ namespace PrintClassInstanceLib
                                 return $"Set value failed - {ex.Message}";
                             }
                         };
-                        var getGetMethod = propertyInfo.GetGetMethod(true);
-                        if (getGetMethod != null)
-                        {
-                        }
                         break;
                     case MemberTypes.Field:
                         var fieldInfo = type.GetField(memberInfo.Name, bindingFlags);
