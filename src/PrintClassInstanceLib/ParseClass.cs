@@ -71,7 +71,7 @@ namespace PrintClassInstanceLib
                 }
                 catch (Exception ex)
                 {
-                    
+                    return $"Set value failed - {ex.Message}";
                 }
             }
 
