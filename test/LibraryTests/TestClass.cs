@@ -196,6 +196,22 @@ namespace LibraryTests
         }
 
         [TestMethod]
+        public void TestObjectCopy()
+        {
+            var so1 = new SimpleObjectWithParent
+            {
+                X = new List<string> { "1", "2", "3" },
+                Field1 = 5,
+                ParentProperty = 5,
+                GrandparentProperty = 5
+            };
+
+            var newObj = so1.DeepClone<SimpleObject1WithList>();
+            Assert.IsTrue(newObj.X.SequenceEqual(so1.X));
+            Assert.IsNull(newObj.Y);
+        }
+
+        [TestMethod]
         public void TestNamespace()
         {
             var so1 = new SimpleObjectWithParent

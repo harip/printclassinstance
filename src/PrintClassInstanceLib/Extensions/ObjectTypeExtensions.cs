@@ -38,12 +38,7 @@ namespace PrintClassInstanceLib.Extensions
                 return ObjType.DateTime;
             }
 
-            if (ModifiedIsArrayType(type))
-            {
-                return ObjType.IsArray;
-            } 
-
-            return ObjType.BaseType;
+            return ModifiedIsArrayType(type) ? ObjType.IsArray : ObjType.BaseType;
         }
 
         public static bool IsEnumerable(this object obj)

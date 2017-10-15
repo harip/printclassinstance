@@ -9,6 +9,7 @@ using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
 using Newtonsoft.Json;
+using NLog.LayoutRenderers.Wrappers;
 using PrintClassInstanceLib.Messages;
 using PrintClassInstanceLib.Upload;
 
@@ -127,21 +128,22 @@ namespace PrintClassInstanceLib.Extensions
 
         public static T DeepClone<T>(this object classInstance)
         {
-            var type = classInstance.GetType();
+            var type = typeof(T);
             var newObject = Activator.CreateInstance(type);
             var obj1Prop = classInstance.GetObjectProperties();
             var memberNames = obj1Prop.Values.Select(s => s.Name).ToList();
-            Parallel.ForEach(memberNames, (memberName) =>
+            void Body(string memberName)
             {
                 var memberValue = obj1Prop.Values.SingleOrDefault(s => s.Name == memberName);
                 if (memberValue != null)
                 {
-                    newObject.SetMemberValue(memberName, memberValue.RawMemberValue); 
+                    newObject.SetMemberValue(memberName, memberValue.RawMemberValue);
                 }
-            });
+            }
+            Parallel.ForEach(memberNames, Body);
             return (T)newObject;
         }
-
+        
         public static object InvokeMethod(this object classInstance,string methodName,object[] methodParams)
         {
             var type = classInstance.GetType();
@@ -166,7 +168,6 @@ namespace PrintClassInstanceLib.Extensions
             var printInfo = classInstance.GetObjectProperties();
             var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
             Encoding enc = new UTF8Encoding(true, true);
-
             var byteArray = cleanData.SelectMany(s =>
             {
                 var al = new ArrayList();
