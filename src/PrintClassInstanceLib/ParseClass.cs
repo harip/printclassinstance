@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Model;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace PrintClassInstanceLib
 {
