@@ -56,18 +56,20 @@ namespace PrintClassInstanceLib
                 .Where(s => s.MemberType == MemberTypes.Property || s.MemberType == MemberTypes.Field)
                 .ToList();
 
-            string setVal1<T>(T t,object parent,object val)
+            string SetVal<T>(T t, object fParent, object newVal)
             {
                 try
                 {
-                    if (t is PropertyInfo)
+                    switch (t)
                     {
-
+                        case PropertyInfo p:
+                            p.SetValue(fParent, newVal, null);
+                            break;
+                        case FieldInfo f:
+                            f.SetValue(fParent, newVal);
+                            break;
                     }
-                    else
-                    {
-                        
-                    }
+                    return string.Empty;
                 }
                 catch (Exception ex)
                 {
@@ -78,7 +80,6 @@ namespace PrintClassInstanceLib
             foreach (var memberInfo in members)
             {
                 object val = null;
-                Func<MemberInfo, object, object,string> setVal = null;
                 Type mType = null;
                 var mTypeNamespace = string.Empty;
                 
@@ -94,38 +95,12 @@ namespace PrintClassInstanceLib
                         val = propertyInfo.GetValue(data, null);
                         mType = propertyInfo.PropertyType;
                         mTypeNamespace = propertyInfo.PropertyType.Namespace;
-                        setVal = (f,fParent,newVal) =>
-                        {
-                            try
-                            {
-                                var propInfo = (PropertyInfo)f;
-                                propInfo.SetValue(fParent, newVal,null);
-                                return string.Empty;
-                            }
-                            catch (Exception ex)
-                            {
-                                return $"Set value failed - {ex.Message}";
-                            }
-                        };
                         break;
                     case MemberTypes.Field:
                         var fieldInfo = type.GetField(memberInfo.Name, bindingFlags);
                         val = fieldInfo.GetValue(data);
                         mType = fieldInfo.FieldType;
                         mTypeNamespace = fieldInfo.FieldType.Namespace;
-                        setVal = (f, fParent, newVal) =>
-                        {
-                            try
-                            {
-                                var fInfo = (FieldInfo)f;
-                                fInfo.SetValue(fParent, newVal);
-                                return string.Empty;
-                            }
-                            catch (Exception ex)
-                            {
-                                return $"Set value failed - {ex.Message}";
-                            }
-                        };
                         break;
                 }
 
@@ -147,7 +122,7 @@ namespace PrintClassInstanceLib
                     ParentId = stackedObj.ParentId,
                     RawMemberValue = val,
                     RawMemberType = mType,
-                    SetVal=setVal,
+                    SetVal= SetVal,
                     Member=memberInfo
                 };
                 var pList = new Queue<PrintInfo>();
