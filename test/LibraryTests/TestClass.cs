@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LibraryTests.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PrintClassInstanceLib;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Format;
 
@@ -405,6 +406,20 @@ namespace LibraryTests
             Assert.IsTrue(cleanData.Any(s => s.Contains("X")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("Y")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("Z")));
+        }
+
+        [TestMethod]
+        public void TestFlatten()
+        {
+            var so1 = new SimpleObject1WithList
+            {
+                X = new List<string> { "String1", "string2", "string3" },
+                Y = new List<double> { 1.1, 2.2, 3.3 }
+            };
+
+            var mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "django");
+
+            var flatten = so1.Flatten(mps);
         }
     }
 }

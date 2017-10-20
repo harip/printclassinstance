@@ -9,7 +9,6 @@ using PrintClassInstanceLib.Format;
 using PrintClassInstanceLib.Model;
 using MoreLinq;
 using Newtonsoft.Json;
-using NLog.LayoutRenderers.Wrappers;
 using PrintClassInstanceLib.Messages;
 using PrintClassInstanceLib.Upload;
 
@@ -186,14 +185,16 @@ namespace PrintClassInstanceLib.Extensions
             return task;
         }
 
-        public static Task<Dictionary<string, object>> Flatten(this object classInstance)
-        { 
+        public static Task<Dictionary<string, object>> Flatten(this object classInstance, IMappings mappings =null)
+        {
+            var mapList = mappings!=null? mappings.MapList:new Dictionary<string, string>();
+
             var printInfo = classInstance.GetObjectProperties();
             var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, classInstance.GetType());
             return Task.FromResult(cleanData);
         }
 
-        public static async ValueTask<string> FlattenedJson(this object classInstance)
+        public static async ValueTask<string> FlattenedJson(this object classInstance, IMappings mappings = null)
         {
             var data = await Flatten(classInstance);
             var jsonData = JsonConvert.SerializeObject(data);

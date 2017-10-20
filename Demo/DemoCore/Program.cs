@@ -12,7 +12,7 @@ namespace DemoCore
         public static void Main(string[] args)
         {
             //Dump the object graph to a file
-            var data = TestDataGenerator.GenerateTestData1();
+            var data = TestDataGenerator.GenerateTestData1(); 
             data.SaveToFile(@"C:\tmp\test.txt");
 
             //Flatten and combine
