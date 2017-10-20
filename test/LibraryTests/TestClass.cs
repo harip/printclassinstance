@@ -417,9 +417,22 @@ namespace LibraryTests
                 Y = new List<double> { 1.1, 2.2, 3.3 }
             };
 
-            var mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "django");
+            var flatten = so1.Flatten().Result;
+            Assert.AreEqual(flatten["X_0"], "String1");
+            Assert.AreEqual(flatten["Y_2"], 3.3);
 
-            var flatten = so1.Flatten(mps);
+            var mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m=>m.Y,"X");
+            flatten = so1.Flatten(mps).Result;
+            Assert.AreEqual(flatten["Y_0"], "String1");
+            Assert.AreEqual(flatten["X_2"], 3.3);
+
+            mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y");
+            flatten = so1.Flatten(mps).Result;
+            Assert.AreEqual(flatten["Y_0"], "String1");
+            Assert.IsTrue(flatten.Count==3);
+
+            mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m => m.Y, "X");
+            var flattenJson = so1.FlattenedJson(mps).Result;
         }
     }
 }

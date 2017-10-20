@@ -187,16 +187,41 @@ namespace PrintClassInstanceLib.Extensions
 
         public static Task<Dictionary<string, object>> Flatten(this object classInstance, IMappings mappings =null)
         {
-            var mapList = mappings!=null? mappings.MapList:new Dictionary<string, string>();
-
             var printInfo = classInstance.GetObjectProperties();
             var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, classInstance.GetType());
-            return Task.FromResult(cleanData);
+            if (mappings==null || !mappings.MapList.Any()) return Task.FromResult(cleanData);
+
+            var mapList = mappings.MapList;
+            var transformedDict=new Dictionary<string, object>();
+            cleanData.ForEach(c =>
+            {
+                if (mapList.ContainsKey(c.Key) && !transformedDict.ContainsKey(mapList[c.Key]))
+                {
+                    transformedDict.Add(mapList[c.Key],c.Value);
+                    return;
+                }
+
+                var forEnum = mapList.Keys.FirstOrDefault(s => c.Key.Contains($"{s}_") );
+                if (forEnum != null)
+                {
+                    var key = c.Key.Replace(forEnum, mapList[forEnum]);
+                    if (transformedDict.ContainsKey(key)) return;
+                    transformedDict.Add(c.Key.Replace(forEnum, mapList[forEnum]), c.Value);
+                    return;
+                }
+
+                if (!transformedDict.ContainsKey(c.Key))
+                {
+                    transformedDict.Add(c.Key, c.Value);
+                }
+            });
+            
+            return Task.FromResult(transformedDict);
         }
 
         public static async ValueTask<string> FlattenedJson(this object classInstance, IMappings mappings = null)
         {
-            var data = await Flatten(classInstance);
+            var data = await Flatten(classInstance, mappings);
             var jsonData = JsonConvert.SerializeObject(data);
             return jsonData;
         }

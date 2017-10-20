@@ -57,7 +57,7 @@ namespace PrintClassInstanceLib.Format
                 switch (printInfo.Type)
                 {
                     case var c when c == "System.String" || c == "String":
-                        val = $"\"{printInfo.Value}\"";
+                        val = $"{printInfo.Value}";
                         break;
                     default:
                         val = printInfo.Value ?? "null";
