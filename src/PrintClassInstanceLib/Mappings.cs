@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
+
 namespace PrintClassInstanceLib
 {
     public interface IMappings
@@ -15,12 +17,30 @@ namespace PrintClassInstanceLib
             MapList=new Dictionary<string, string>();
         }
         public Dictionary<string, string> MapList { get; set; }
-        public Mappings<T> Map(Expression<Func<T, object>> func, string newName)
+        public Mappings<T> Map(Expression<Func<T,object>> func, string newName)
         {
-            if (!(func.Body is MemberExpression member) || string.IsNullOrEmpty(newName)) return this;
-            if (!string.IsNullOrEmpty(member.Member.Name) && !MapList.ContainsKey(member.Member.Name))
+            if (string.IsNullOrEmpty(newName)) return this;
+            switch (func.Body)
             {
-                MapList.Add(member.Member.Name, newName);
+                case MemberExpression mem:
+                    if (GetMapping(MapList,mem.Member))
+                    {
+                        MapList.Add(mem.Member.Name, newName);
+                    }
+                    break;
+                case UnaryExpression ue:
+                    var operand = (MemberExpression) ue.Operand;
+                    if (operand == null) break;
+
+                    if (GetMapping(MapList, operand.Member))
+                    {
+                        MapList.Add(operand.Member.Name, newName);
+                    }
+                    break;
+            }
+            bool GetMapping(Dictionary<string, string> existingList, MemberInfo mInfo)
+            {
+                return !string.IsNullOrEmpty(mInfo.Name) && !existingList.ContainsKey(mInfo.Name);
             }
             return this;
         }

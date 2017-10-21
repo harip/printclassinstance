@@ -436,6 +436,32 @@ namespace LibraryTests
         }
 
         [TestMethod]
+        public void TestFlatten1()
+        {
+            var so1 = new SimpleObjectWithParent
+            {
+                X = new List<string> { "1", "2", "3" },
+                Field1 = 5,
+                ParentProperty = 5,
+                GrandparentProperty = 5
+            };
+
+            var dict = so1.Flatten().Result;
+            Assert.AreEqual(dict["X_0"], "1");
+            Assert.AreEqual(dict["GrandparentProperty"], 5);
+
+            var mps = new Mappings<SimpleObjectWithParent>()
+                .Map(m => m.X, "A")
+                .Map(m => m.Field1, "B")
+                .Map(m => m.GrandparentProperty, "Field2");
+            dict = so1.Flatten(mps).Result;
+
+            Assert.AreEqual(dict["A_0"], "1");
+            Assert.AreEqual(dict["B"],5);
+            Assert.AreEqual(dict["Field2"], 5);
+        }
+
+        [TestMethod]
         public void TestCombineAndFlatten()
         {
             var so1 = new SimpleObject1WithList
