@@ -434,5 +434,44 @@ namespace LibraryTests
             mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m => m.Y, "X");
             var flattenJson = so1.FlattenedJson(mps).Result;
         }
+
+        [TestMethod]
+        public void TestCombineAndFlatten()
+        {
+            var so1 = new SimpleObject1WithList
+            {
+                X = new List<string> { "String1", "string2", "string3" },
+                Y = new List<double> { 1.1, 2.2, 3.3 }
+            };
+
+            var so2 = new SimpleObjectWithList
+            {
+                X = new List<string> { "String1", "string2", "string3" },
+            };
+
+            var so3 = new SimpleObject2
+            {
+                X = 1,
+                Y = 2,
+                Z = "3"
+            };
+
+            var flatten = so1.CombineAndFlatten(so2, so3).Result;
+            Assert.AreEqual(flatten["obj0_X_0"], "String1");
+            Assert.AreEqual(flatten["obj0_X_1"], "string2");
+            Assert.AreEqual(flatten["obj0_X_2"], "string3");
+                                        
+            Assert.AreEqual(flatten["obj0_Y_0"],1.1);
+            Assert.AreEqual(flatten["obj0_Y_1"], 2.2);
+            Assert.AreEqual(flatten["obj0_Y_2"], 3.3);
+
+            Assert.AreEqual(flatten["obj1_X_0"], "String1");
+            Assert.AreEqual(flatten["obj1_X_1"], "string2");
+            Assert.AreEqual(flatten["obj1_X_2"], "string3");
+
+            Assert.AreEqual(flatten["obj2_X"], 1);
+            Assert.AreEqual(flatten["obj2_Y"], 2);
+            Assert.AreEqual(flatten["obj2_Z"], "3");
+        }
     }
 }
