@@ -9,7 +9,7 @@ using PrintClassInstanceLib.Model;
 
 namespace PrintClassInstanceLib
 {
-    public static class 
+    public static class ParseClass
     {
         public static void GetBaseTypeInfo(Type baseType,
             object data, 
