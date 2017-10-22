@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DemoCore
 {
@@ -25,14 +24,10 @@ namespace DemoCore
 
         public void ParentSetCount(int z)
         {
-            var x = 1;
-            var y = 1 * 10;
         }
 
         private  void ParentGetCount(int z)
         {
-            var x = 1;
-            var y = 1 * 10;
         }
     }
 
@@ -74,13 +69,10 @@ namespace DemoCore
 
         public void SetCount(int z)
         {
-            var x = 1;
-            var y = 1 * 10;
         }
 
         public int GetCount(PrintMe printme,List<string> test)
         {
-            var x = 1;
             var y = 1 * 10;
             return y;
         }
