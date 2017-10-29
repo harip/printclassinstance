@@ -430,7 +430,7 @@ namespace LibraryTests
             mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y");
             flatten = so1.Flatten(mps).Result;
             Assert.AreEqual(flatten["Y_0"], "String1");
-            Assert.IsTrue(flatten.Count == 3);
+            Assert.IsTrue(flatten.Count == 7);
 
             mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m => m.Y, "X");
             var flattenJson = so1.FlattenedJson(mps).Result;
@@ -514,16 +514,14 @@ namespace LibraryTests
         public void CreateInstanceTest_WithMappings()
         {
             var stringData = new List<string> {"1", "2", "3"};
-            var mappings = new Mappings<SimpleObjectWithParent>()
+            var mappings = new Mappings<SimpleObject1WithList>()
                 .Map(s => s.X, stringData)
-                .Map(s => s.GrandparentProperty, 1000)
                 .Map(s => s.TestValueTuple, (1, 2, 3, "I am a value tuple"));
 
-            var testObject = InstanceUtils.CreateInstance<SimpleObjectWithParent>(mappings);
+            var testObject = InstanceUtils.CreateInstance<SimpleObject1WithList>(mappings);
             Assert.IsTrue(testObject != null);
             Assert.IsFalse(testObject.X.Except(stringData).Any());
-            Assert.AreEqual(testObject.GrandparentProperty,1000);
-            Assert.AreEqual(testObject.Field1,0);
+            Assert.AreEqual(testObject.Y,null);
             Assert.AreEqual(testObject.TestValueTuple.strItem4 , "I am a value tuple");
         }
     }

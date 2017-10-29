@@ -35,6 +35,7 @@ namespace LibraryTests.TestData
     {
         public List<string> X { get; set; }
         public List<double> Y { get; set; }
+        public (int intItem1, int intItem2, int intItem3, string strItem4) TestValueTuple { get; set; }
     }
 
     public class SimpleObjectNullable
@@ -49,7 +50,7 @@ namespace LibraryTests.TestData
         public int Field1;
         public List<string> X { get; set; }
         private int Z = 10;
-        public (int intItem1, int intItem2, int intItem3, string strItem4) TestValueTuple { get; set; }
+        
 
         public int GetCount()
         {
