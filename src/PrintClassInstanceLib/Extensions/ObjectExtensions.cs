@@ -191,11 +191,11 @@ namespace PrintClassInstanceLib.Extensions
             var cleanData = VariableFormat.CreateOutputAsDictionary(printInfo, classInstance.GetType());
             if (mappings==null || !mappings.MapList.Any()) return Task.FromResult(cleanData);
 
-            var mapList = mappings.MapList;
+            var mapList = mappings.MapList.ToDictionary(d => d.Key, d => d.Value.ToString());
             var transformedDict=new Dictionary<string, object>();
             cleanData.ForEach(c =>
             {
-                if (mapList.ContainsKey(c.Key) && !transformedDict.ContainsKey(mapList[c.Key]))
+                if (mapList.ContainsKey(c.Key) && !transformedDict.ContainsKey(mapList[c.Key].ToString()))
                 {
                     transformedDict.Add(mapList[c.Key],c.Value);
                     return;

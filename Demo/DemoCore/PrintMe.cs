@@ -49,7 +49,7 @@ namespace DemoCore
         public Dictionary<string, List<PrintMeChild>> DictionaryWithListTest { get; set; }
 
         //public Tuple<int, int, int, string> TestTuple { get; set; }
-        public (int intItem1,int intItem2,int intItem3,string strItem4) TestTuple { get; set; }
+        public (int intItem1,int intItem2,int intItem3,string strItem4) TestValueTuple { get; set; }
         
         public PrintMe()
         {

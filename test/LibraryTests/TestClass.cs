@@ -178,21 +178,21 @@ namespace LibraryTests
         {
             var so1 = new SimpleObjectWithParent
             {
-                X = new List<string> { "1", "2", "3" },
+                X = new List<string> {"1", "2", "3"},
                 Field1 = 5,
                 ParentProperty = 5,
                 GrandparentProperty = 5
             };
-            
+
             var so1DeepClone = so1.DeepClone<SimpleObjectWithParent>();
             Assert.IsTrue(so1.X.SequenceEqual(so1DeepClone.X));
             Assert.AreEqual(so1.Field1, so1DeepClone.Field1);
             Assert.AreEqual(so1.ParentProperty, so1DeepClone.ParentProperty);
             Assert.AreEqual(so1.GrandparentProperty, so1DeepClone.GrandparentProperty);
-            
+
             //Change the parent
             so1.Field1 = 6;
-            Assert.AreEqual(so1.Field1,6);
+            Assert.AreEqual(so1.Field1, 6);
             Assert.AreEqual(so1DeepClone.Field1, 5);
         }
 
@@ -201,7 +201,7 @@ namespace LibraryTests
         {
             var so1 = new SimpleObjectWithParent
             {
-                X = new List<string> { "1", "2", "3" },
+                X = new List<string> {"1", "2", "3"},
                 Field1 = 5,
                 ParentProperty = 5,
                 GrandparentProperty = 5
@@ -217,7 +217,7 @@ namespace LibraryTests
         {
             var so1 = new SimpleObjectWithParent
             {
-                X = new List<string> { "1", "2", "3" },
+                X = new List<string> {"1", "2", "3"},
                 Field1 = 5,
                 ParentProperty = 5,
                 GrandparentProperty = 5
@@ -232,14 +232,14 @@ namespace LibraryTests
         {
             var so1 = new SimpleObjectWithParent
             {
-                X = new List<string> { "1", "2", "3" },
+                X = new List<string> {"1", "2", "3"},
                 Field1 = 5,
                 ParentProperty = 5,
                 GrandparentProperty = 5
             };
 
-            var baseClassNames=so1.GetBaseClassesNames();
-            Assert.AreEqual(2,baseClassNames.Count);
+            var baseClassNames = so1.GetBaseClassesNames();
+            Assert.AreEqual(2, baseClassNames.Count);
             Assert.IsTrue(baseClassNames.Contains("Parent"));
             Assert.IsTrue(baseClassNames.Contains("Grandparent"));
         }
@@ -277,7 +277,7 @@ namespace LibraryTests
         public void GetMethodInfo()
         {
             var ns = typeof(SimpleObjectWithParent).GetAllMethods();
-            Assert.AreEqual(ns.Count,2);
+            Assert.AreEqual(ns.Count, 2);
         }
 
         [TestMethod]
@@ -285,7 +285,7 @@ namespace LibraryTests
         {
             var ns = typeof(SimpleObjectWithParent).GetAllMethodsMetaData();
             Assert.AreEqual(ns.Count, 2);
-            Assert.IsTrue(ns.Any(n=>n.Signature== "Int32 GetCount()"));
+            Assert.IsTrue(ns.Any(n => n.Signature == "Int32 GetCount()"));
             Assert.IsTrue(ns.Any(n => n.Signature == "Int32 GetParentCount()"));
         }
 
@@ -293,7 +293,7 @@ namespace LibraryTests
         public void InvokeMethod()
         {
             var obj = new SimpleObjectWithParent();
-            var val=obj.InvokeMethod("GetParentCount", null);
+            var val = obj.InvokeMethod("GetParentCount", null);
             Assert.AreEqual(val, 10);
         }
 
@@ -302,14 +302,14 @@ namespace LibraryTests
         {
             var obj = new TestStruct
             {
-                Book = new Book { Title = "harrypotter", Author = "rowling" }
+                Book = new Book {Title = "harrypotter", Author = "rowling"}
             };
 
             var type = obj.GetType();
             var printInfo = obj.GetObjectProperties();
-            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type );
+            var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, type);
 
-            Assert.IsTrue(cleanData.Any(s=>s.Contains("Title")));
+            Assert.IsTrue(cleanData.Any(s => s.Contains("Title")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("Author")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("harrypotter")));
             Assert.IsTrue(cleanData.Any(s => s.Contains("rowling")));
@@ -320,7 +320,7 @@ namespace LibraryTests
         {
             var obj = new TestValueTuple
             {
-                ValueTuple = (1,2,3,"TestValueTuple")
+                ValueTuple = (1, 2, 3, "TestValueTuple")
             };
 
             var type = obj.GetType();
@@ -338,7 +338,7 @@ namespace LibraryTests
         {
             var obj = new TestTuple
             {
-                Tuple = Tuple.Create(1,2,"TupleTest")
+                Tuple = Tuple.Create(1, 2, "TupleTest")
             };
 
             var type = obj.GetType();
@@ -382,10 +382,11 @@ namespace LibraryTests
                 IntVal = 10
             };
             infiniteLoop.InfiniteLoop = infiniteLoop;
-             
+
             var printInfo = infiniteLoop.GetObjectProperties();
             var cleanData = VariableFormat.CreateOutputAsVariableFormat(printInfo, infiniteLoop.GetType());
-            Assert.IsTrue(cleanData.Any(s => s.Contains("InfiniteLoop = Error: Member too big to evaluate or has infinite reference")));
+            Assert.IsTrue(cleanData.Any(s =>
+                s.Contains("InfiniteLoop = Error: Member too big to evaluate or has infinite reference")));
         }
 
         [TestMethod]
@@ -393,8 +394,8 @@ namespace LibraryTests
         {
             var data = new TestListOfString
             {
-                StringListField = new List<string> { "A","B","C" },
-                StringListProperty = new List<string> { "X","Y","Z"}
+                StringListField = new List<string> {"A", "B", "C"},
+                StringListProperty = new List<string> {"X", "Y", "Z"}
             };
 
             var printInfo = data.GetObjectProperties();
@@ -413,15 +414,15 @@ namespace LibraryTests
         {
             var so1 = new SimpleObject1WithList
             {
-                X = new List<string> { "String1", "string2", "string3" },
-                Y = new List<double> { 1.1, 2.2, 3.3 }
+                X = new List<string> {"String1", "string2", "string3"},
+                Y = new List<double> {1.1, 2.2, 3.3}
             };
 
             var flatten = so1.Flatten().Result;
             Assert.AreEqual(flatten["X_0"], "String1");
             Assert.AreEqual(flatten["Y_2"], 3.3);
 
-            var mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m=>m.Y,"X");
+            var mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m => m.Y, "X");
             flatten = so1.Flatten(mps).Result;
             Assert.AreEqual(flatten["Y_0"], "String1");
             Assert.AreEqual(flatten["X_2"], 3.3);
@@ -429,7 +430,7 @@ namespace LibraryTests
             mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y");
             flatten = so1.Flatten(mps).Result;
             Assert.AreEqual(flatten["Y_0"], "String1");
-            Assert.IsTrue(flatten.Count==3);
+            Assert.IsTrue(flatten.Count == 3);
 
             mps = new Mappings<SimpleObject1WithList>().Map(m => m.X, "Y").Map(m => m.Y, "X");
             var flattenJson = so1.FlattenedJson(mps).Result;
@@ -440,7 +441,7 @@ namespace LibraryTests
         {
             var so1 = new SimpleObjectWithParent
             {
-                X = new List<string> { "1", "2", "3" },
+                X = new List<string> {"1", "2", "3"},
                 Field1 = 5,
                 ParentProperty = 5,
                 GrandparentProperty = 5
@@ -457,7 +458,7 @@ namespace LibraryTests
             dict = so1.Flatten(mps).Result;
 
             Assert.AreEqual(dict["A_0"], "1");
-            Assert.AreEqual(dict["B"],5);
+            Assert.AreEqual(dict["B"], 5);
             Assert.AreEqual(dict["Field2"], 5);
         }
 
@@ -466,13 +467,13 @@ namespace LibraryTests
         {
             var so1 = new SimpleObject1WithList
             {
-                X = new List<string> { "String1", "string2", "string3" },
-                Y = new List<double> { 1.1, 2.2, 3.3 }
+                X = new List<string> {"String1", "string2", "string3"},
+                Y = new List<double> {1.1, 2.2, 3.3}
             };
 
             var so2 = new SimpleObjectWithList
             {
-                X = new List<string> { "String1", "string2", "string3" },
+                X = new List<string> {"String1", "string2", "string3"},
             };
 
             var so3 = new SimpleObject2
@@ -486,8 +487,8 @@ namespace LibraryTests
             Assert.AreEqual(flatten["obj0_X_0"], "String1");
             Assert.AreEqual(flatten["obj0_X_1"], "string2");
             Assert.AreEqual(flatten["obj0_X_2"], "string3");
-                                        
-            Assert.AreEqual(flatten["obj0_Y_0"],1.1);
+
+            Assert.AreEqual(flatten["obj0_Y_0"], 1.1);
             Assert.AreEqual(flatten["obj0_Y_1"], 2.2);
             Assert.AreEqual(flatten["obj0_Y_2"], 3.3);
 
@@ -498,6 +499,32 @@ namespace LibraryTests
             Assert.AreEqual(flatten["obj2_X"], 1);
             Assert.AreEqual(flatten["obj2_Y"], 2);
             Assert.AreEqual(flatten["obj2_Z"], "3");
+        }
+
+        [TestMethod]
+        public void CreateInstanceTest_NoMappings()
+        {
+            var testObject = InstanceUtils.CreateInstance<SimpleObjectWithParent>();
+            Assert.IsTrue(testObject!=null);
+            Assert.IsTrue(testObject.X==null);
+            Assert.AreEqual(testObject.GrandparentProperty,0);
+        }
+
+        [TestMethod]
+        public void CreateInstanceTest_WithMappings()
+        {
+            var stringData = new List<string> {"1", "2", "3"};
+            var mappings = new Mappings<SimpleObjectWithParent>()
+                .Map(s => s.X, stringData)
+                .Map(s => s.GrandparentProperty, 1000)
+                .Map(s => s.TestValueTuple, (1, 2, 3, "I am a value tuple"));
+
+            var testObject = InstanceUtils.CreateInstance<SimpleObjectWithParent>(mappings);
+            Assert.IsTrue(testObject != null);
+            Assert.IsFalse(testObject.X.Except(stringData).Any());
+            Assert.AreEqual(testObject.GrandparentProperty,1000);
+            Assert.AreEqual(testObject.Field1,0);
+            Assert.AreEqual(testObject.TestValueTuple.strItem4 , "I am a value tuple");
         }
     }
 }

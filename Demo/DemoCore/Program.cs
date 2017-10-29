@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.S3;
+using PrintClassInstanceLib;
 using PrintClassInstanceLib.Extensions;
 using PrintClassInstanceLib.Messages;
 
@@ -11,6 +12,14 @@ namespace DemoCore
     {
         public static void Main(string[] args)
         {
+            //Creater instance with mappings
+            var testObject = InstanceUtils.CreateInstance<PrintMe>();
+            var mappings = new Mappings<PrintMe>()
+                .Map(s => s.DateTimeTest, DateTime.Now)
+                .Map(s => s.TestValueTuple, (1, 2, 3, "4"))
+                .Map(s => s.PrintMeEnum, PrintMeEnum.PrintMeEnum2);
+            var testObject1= InstanceUtils.CreateInstance<PrintMe>(mappings);
+
             //Dump the object graph to a file
             var data = TestDataGenerator.GenerateTestData1(); 
             data.SaveToFile(@"C:\tmp\test.txt");
