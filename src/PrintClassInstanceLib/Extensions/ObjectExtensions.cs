@@ -142,8 +142,25 @@ namespace PrintClassInstanceLib.Extensions
             Parallel.ForEach(memberNames, Body);
             return (T)newObject;
         }
-        
-        public static object InvokeMethod(this object classInstance,string methodName,object[] methodParams)
+
+	    public static T Copy<T>(this object classInstance,T targetObjectInstance) where T:class
+	    {
+		    if (targetObjectInstance == null) return null;
+		    var obj1Prop = classInstance.GetObjectProperties();
+		    var memberNames = obj1Prop.Values.Select(s => s.Name).ToList();
+		    void Body(string memberName)
+		    {
+			    var memberValue = obj1Prop.Values.SingleOrDefault(s => s.Name == memberName);
+			    if (memberValue != null)
+			    {
+				    targetObjectInstance.SetMemberValue(memberName, memberValue.RawMemberValue);
+			    }
+		    }
+		    Parallel.ForEach(memberNames, Body);
+		    return targetObjectInstance;
+	    }
+
+		public static object InvokeMethod(this object classInstance,string methodName,object[] methodParams)
         {
             var type = classInstance.GetType();
             var method = type.GetAllMethods().FirstOrDefault(s => s.Name == methodName);
