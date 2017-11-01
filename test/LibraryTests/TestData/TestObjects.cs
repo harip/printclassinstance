@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace LibraryTests.TestData
 {
+    public class ComplexObject
+    {
+        public List<SimpleObject> SimpleObjects { get; set; }
+        public SimpleObject SimpleObject { get; set; }
+    }
+
     public class SimpleObject
     {
         public int X { get; set; }

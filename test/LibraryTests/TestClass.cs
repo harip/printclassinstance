@@ -463,6 +463,46 @@ namespace LibraryTests
         }
 
         [TestMethod]
+        public void TestFlatten2()
+        {
+            var so1 = new ComplexObject
+            {
+                SimpleObject = new SimpleObject
+                {
+                    X = 1,
+                    Y = "Y",
+                    Z = "Z"
+                },
+                SimpleObjects = new List<SimpleObject>
+                {
+                    new SimpleObject
+                    {
+                        X = 2,
+                        Y = "Y2",
+                        Z = "Z2"
+                    },
+                    new SimpleObject
+                    {
+                        X = 3,
+                        Y = "Y3",
+                        Z = "Z3"
+                    }
+                }
+            };
+            var flatten = so1.Flatten().Result;
+            Assert.AreEqual(flatten["SimpleObject_X"], 1);
+            Assert.AreEqual(flatten["SimpleObject_Y"], "Y");
+            Assert.AreEqual(flatten["SimpleObject_Z"], "Z");
+            Assert.AreEqual(flatten["SimpleObjects_0_X"],2);
+            Assert.AreEqual(flatten["SimpleObjects_0_Y"], "Y2");
+            Assert.AreEqual(flatten["SimpleObjects_0_Z"], "Z2");
+            Assert.AreEqual(flatten["SimpleObjects_1_X"], 3);
+            Assert.AreEqual(flatten["SimpleObjects_1_Y"], "Y3");
+            Assert.AreEqual(flatten["SimpleObjects_1_Z"], "Z3");
+
+        }
+
+        [TestMethod]
         public void TestCombineAndFlatten()
         {
             var so1 = new SimpleObject1WithList
