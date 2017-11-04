@@ -493,7 +493,7 @@ namespace LibraryTests
             Assert.AreEqual(flatten["SimpleObject_X"], 1);
             Assert.AreEqual(flatten["SimpleObject_Y"], "Y");
             Assert.AreEqual(flatten["SimpleObject_Z"], "Z");
-            Assert.AreEqual(flatten["SimpleObjects_0_X"],2);
+            Assert.AreEqual(flatten["SimpleObjects_0_X"], 2);
             Assert.AreEqual(flatten["SimpleObjects_0_Y"], "Y2");
             Assert.AreEqual(flatten["SimpleObjects_0_Z"], "Z2");
             Assert.AreEqual(flatten["SimpleObjects_1_X"], 3);
@@ -545,9 +545,9 @@ namespace LibraryTests
         public void CreateInstanceTest_NoMappings()
         {
             var testObject = InstanceUtils.CreateInstance<SimpleObjectWithParent>();
-            Assert.IsTrue(testObject!=null);
-            Assert.IsTrue(testObject.X==null);
-            Assert.AreEqual(testObject.GrandparentProperty,0);
+            Assert.IsTrue(testObject != null);
+            Assert.IsTrue(testObject.X == null);
+            Assert.AreEqual(testObject.GrandparentProperty, 0);
         }
 
         [TestMethod]
@@ -561,8 +561,43 @@ namespace LibraryTests
             var testObject = InstanceUtils.CreateInstance<SimpleObject1WithList>(mappings);
             Assert.IsTrue(testObject != null);
             Assert.IsFalse(testObject.X.Except(stringData).Any());
-            Assert.AreEqual(testObject.Y,null);
-            Assert.AreEqual(testObject.TestValueTuple.strItem4 , "I am a value tuple");
+            Assert.AreEqual(testObject.Y, null);
+            Assert.AreEqual(testObject.TestValueTuple.strItem4, "I am a value tuple");
+        }
+
+        [TestMethod]
+        public void  TrackingTest()
+        {
+            var simpleObj=new SimpleObject1();
+            var dictTracker=new DictionaryContainer();
+            var jsonTracker = new JsonContainer();
+            for (var i = 0; i < 10; i++)
+            {
+                simpleObj.X = i;
+
+                simpleObj.Snapshot(dictTracker);
+                simpleObj.Snapshot(jsonTracker);
+            }
+
+            var dictTrackings = dictTracker.GetSnapshots();
+            var jsonTrackings = jsonTracker.GetSnapshots();
+            Assert.AreEqual(dictTrackings.Count,10);
+            Assert.AreEqual(jsonTrackings.Count, 10);
+
+            Assert.AreEqual( dictTrackings.ElementAt(0)["X"],9 );
+            Assert.AreEqual(dictTrackings.ElementAt(1)["X"], 8);
+        }
+
+        [TestMethod]
+        public void CopyToAnotherObject()
+        {
+            var simpleObj = new SimpleObject1WithList {X = new List<string> {"1", "2", "3"}};
+            var obj2=new SimpleObjectWithList();
+            simpleObj.Copy(obj2);
+            Assert.IsTrue(obj2.X.Contains("1"));
+            Assert.IsTrue(obj2.X.Contains("2"));
+            Assert.IsTrue(obj2.X.Contains("3"));
+            Assert.AreEqual(obj2.X.Count,3);
         }
     }
 }

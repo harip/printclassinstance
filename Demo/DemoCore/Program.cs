@@ -12,6 +12,20 @@ namespace DemoCore
     {
         public static void Main(string[] args)
         {
+            var data = TestDataGenerator.GenerateTestData1();
+
+            //Tracking
+            var dictTrack = new DictionaryContainer();
+            var jsonTrack = new JsonContainer();
+            for (var i= 0; i <= 10; i++)
+            {
+                data.ParentStringTest = i.ToString();
+                data.Snapshot(dictTrack);
+                data.Snapshot(jsonTrack);
+            }
+            var snapshots1 = dictTrack.GetSnapshots();
+            var snapshots2 = jsonTrack.GetSnapshots();
+
             //Creater instance with mappings
             var testObject = InstanceUtils.CreateInstance<PrintMe>();
             var mappings = new Mappings<PrintMe>()
@@ -21,7 +35,6 @@ namespace DemoCore
             var testObject1= InstanceUtils.CreateInstance<PrintMe>(mappings);
 
             //Dump the object graph to a file
-            var data = TestDataGenerator.GenerateTestData1(); 
             data.SaveToFile(@"C:\tmp\test.txt");
 
             //Flatten and combine
