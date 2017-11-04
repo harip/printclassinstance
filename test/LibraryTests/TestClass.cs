@@ -592,8 +592,10 @@ namespace LibraryTests
         public void CopyToAnotherObject()
         {
             var simpleObj = new SimpleObject1WithList {X = new List<string> {"1", "2", "3"}};
-            var obj2=new SimpleObjectWithList();
+            var obj2=new SimpleObjectWithList {X = null};
             simpleObj.Copy(obj2);
+
+
             Assert.IsTrue(obj2.X.Contains("1"));
             Assert.IsTrue(obj2.X.Contains("2"));
             Assert.IsTrue(obj2.X.Contains("3"));
