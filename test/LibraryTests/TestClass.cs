@@ -593,7 +593,7 @@ namespace LibraryTests
         {
             var simpleObj = new SimpleObject1WithList {X = new List<string> {"1", "2", "3"}};
             var obj2=new SimpleObjectWithList {X = null};
-            simpleObj.Copy(obj2);
+            simpleObj.CopyTo(obj2);
 
 
             Assert.IsTrue(obj2.X.Contains("1"));

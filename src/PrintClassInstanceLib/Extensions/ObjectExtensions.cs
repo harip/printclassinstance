@@ -143,7 +143,7 @@ namespace PrintClassInstanceLib.Extensions
             return (T)newObject;
         }
 
-	    public static T Copy<T>(this object classInstance,T targetObjectInstance) where T:class
+	    public static T CopyTo<T>(this object classInstance,T targetObjectInstance) where T:class
 	    {
 		    if (targetObjectInstance == null) return null;
 		    var obj1Prop = classInstance.GetObjectProperties();

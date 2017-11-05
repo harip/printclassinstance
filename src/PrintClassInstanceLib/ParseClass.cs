@@ -113,7 +113,7 @@ namespace PrintClassInstanceLib
                 var pInfo = new PrintInfo
                 {
                     Name = memberInfo.Name,
-                    Type = mType.ToString(),
+                    Type = mType!=null ? mType.ToString():string.Empty,
                     Namespace = mTypeNamespace,
                     Id = stackedObj.Id,
                     ParentId = stackedObj.ParentId,
@@ -186,7 +186,7 @@ namespace PrintClassInstanceLib
                     {
                         //Get the info's parentId
                         var parent = relationList.SingleOrDefault(s => s.Id == info.ParentId);
-                        parent.Values.Add(info);
+                        parent?.Values.Add(info);
                         toRemove.Add(info);
                     }
                 }

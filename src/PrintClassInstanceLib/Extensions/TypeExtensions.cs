@@ -73,7 +73,8 @@ namespace PrintClassInstanceLib.Extensions
 
             var types= type.GetBaseClassesTypes();
             types.Add(type);
-            
+
+            var info = methodInfo;
             types.ForEach(t =>
             {
                 var methods = t.GetMembers(bindingFlags)
@@ -87,7 +88,7 @@ namespace PrintClassInstanceLib.Extensions
                     .ToList()
                     .Where(s => s != null).ToList();
 
-                methodInfo.AddRange(methods);
+                info.AddRange(methods);
             });
 
             methodInfo = methodInfo.DistinctBy(m => new {
