@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.3.16.2" />
-    <PackageReference Include="morelinq" Version="2.9.0" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.17" />
+    <PackageReference Include="morelinq" Version="2.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta3" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
   </ItemGroup>
